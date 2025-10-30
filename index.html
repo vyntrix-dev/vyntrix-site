@@ -3,262 +3,160 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VYNTRIX</title>
-  <meta name="description" content="VYNTRIX — Developer focused on advanced systems, AI, and immersive digital experiences." />
-  <meta property="og:title" content="VYNTRIX" />
-  <meta property="og:description" content="Developer • Builder • Innovator" />
-  <meta property="og:image" content="https://media.tenor.com/PXRVXxJeyh8AAAAM/cat-meme-hehehe-mwehehe.gif" />
-  <meta name="theme-color" content="#b472ff" />
-  <link rel="icon" href="https://media.tenor.com/PXRVXxJeyh8AAAAM/cat-meme-hehehe-mwehehe.gif" />
+  <title>Vyntrix</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
-
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
-    body { background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%); color: #fff; overflow-x: hidden; }
-
-    /* --- Navbar --- */
-    nav {
-      position: fixed; top: 0; width: 100%; backdrop-filter: blur(10px);
-      background: rgba(10, 10, 10, 0.6); z-index: 10; display: flex; justify-content: center;
-      border-bottom: 1px solid rgba(180, 114, 255, 0.2);
-    }
-    nav ul { display: flex; list-style: none; gap: 40px; padding: 15px 0; }
-    nav a {
-      text-decoration: none; color: #bbb; font-weight: 500; position: relative;
-      transition: 0.3s;
-    }
-    nav a:hover, nav a.active { color: #b472ff; }
-    nav a.active::after {
-      content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 2px; background: #b472ff; border-radius: 2px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    section {
-      min-height: 100vh; display: flex; flex-direction: column;
-      justify-content: center; align-items: center; padding: 100px 20px;
-      text-align: center; position: relative;
+    body {
+      height: 100vh;
+      overflow: hidden;
+      font-family: "Poppins", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #fff;
+      background: radial-gradient(circle at center, #0c0c0f, #050505);
+      text-align: center;
     }
 
-    /* --- Background Grid --- */
-    .grid-bg {
-      position: fixed; top: 0; left: 0; width: 200%; height: 200%;
-      background: repeating-linear-gradient(0deg, rgba(128,0,255,0.05) 0, rgba(128,0,255,0.05) 1px, transparent 1px, transparent 50px),
-                  repeating-linear-gradient(90deg, rgba(128,0,255,0.05) 0, rgba(128,0,255,0.05) 1px, transparent 1px, transparent 50px);
-      transform: rotate(5deg); animation: moveGrid 15s linear infinite;
+    /* Parallax Background */
+    .background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 120%;
+      height: 120%;
+      background: url("https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80")
+        no-repeat center center;
+      background-size: cover;
+      transform: translate(-10%, -10%) scale(1.1);
+      transition: transform 0.2s ease-out;
       z-index: -2;
-    }
-    @keyframes moveGrid { from { transform: translateY(0) rotate(5deg); } to { transform: translateY(50px) rotate(5deg); } }
-
-    /* --- Particles --- */
-    .particles {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      overflow: hidden; z-index: -1;
-    }
-    .particle {
-      position: absolute; background: rgba(180, 114, 255, 0.5);
-      border-radius: 50%; animation: float 20s linear infinite;
-    }
-    @keyframes float {
-      0% { transform: translateY(0) scale(1); opacity: 0.8; }
-      50% { opacity: 0.5; }
-      100% { transform: translateY(-2000px) scale(0.5); opacity: 0; }
+      filter: brightness(0.35) blur(3px);
+      animation: bgPulse 12s infinite alternate ease-in-out;
     }
 
-    /* --- Hero --- */
-    #hero .avatar {
-      width: 140px; height: 140px; border-radius: 50%; overflow: hidden;
-      box-shadow: 0 0 30px #7b2fff; margin-bottom: 20px;
+    /* Glowing aura behind content */
+    .glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.05), transparent);
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      animation: pulse 8s infinite alternate ease-in-out;
+      border-radius: 50%;
+      filter: blur(100px);
     }
-    #hero img { width: 100%; height: 100%; object-fit: cover; }
-    #hero h1 { font-size: 3rem; color: #b472ff; }
-    .typewriter {
-      font-size: 1.2rem; margin-top: 10px; color: #c9a4ff;
-      border-right: 3px solid #b472ff; white-space: nowrap; overflow: hidden;
-      width: 0; animation: typing 3s steps(30, end) forwards, blink 0.7s infinite;
+
+    @keyframes pulse {
+      from { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+      to { opacity: 0.6; transform: translate(-50%, -50%) scale(1.2); }
     }
-    @keyframes typing { from { width: 0; } to { width: 220px; } }
-    @keyframes blink { 50% { border-color: transparent; } }
 
-    .btn {
-      padding: 10px 25px; border: 1px solid #b472ff; color: #fff; text-decoration: none;
-      border-radius: 10px; transition: all 0.3s; background: rgba(180, 114, 255, 0.1);
+    @keyframes bgPulse {
+      from { filter: brightness(0.3) blur(3px); }
+      to { filter: brightness(0.45) blur(4px); }
     }
-    .btn:hover { background: #b472ff; color: #000; box-shadow: 0 0 15px #b472ff; }
 
-    /* --- About --- */
-    #about p { max-width: 700px; color: #ccc; line-height: 1.8; margin-top: 20px; font-size: 1.1rem; }
-
-    /* --- Projects --- */
-    .projects { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 40px; }
-    .project {
-      width: 280px; background: rgba(40, 0, 77, 0.4); border: 1px solid rgba(180, 114, 255, 0.4);
-      border-radius: 15px; overflow: hidden; cursor: pointer; transition: 0.4s;
+    img.pfp {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      margin-bottom: 20px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+      animation: fadeIn 1.2s ease;
     }
-    .project:hover { transform: scale(1.05); box-shadow: 0 0 25px #b472ff; }
-    .project img { width: 100%; height: 180px; object-fit: cover; }
-    .project-info { padding: 15px; }
-    .project-info h3 { color: #b472ff; }
-    .project-info a { color: #c9a4ff; font-size: 0.9rem; text-decoration: none; }
 
-    /* --- Tech Stack --- */
-    .tech-stack { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 40px; }
-    .tech {
-      background: rgba(40, 0, 77, 0.4); border: 1px solid rgba(180, 114, 255, 0.4);
-      border-radius: 12px; padding: 15px 25px; font-size: 1rem; transition: 0.3s;
-      cursor: default; position: relative;
+    h1 {
+      font-size: 3rem;
+      text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+      animation: fadeIn 1.5s ease;
     }
-    .tech:hover { background: rgba(180, 114, 255, 0.2); box-shadow: 0 0 20px #b472ff; transform: translateY(-3px); }
 
-    /* --- Contact --- */
-    #contact .buttons { display: flex; gap: 15px; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
-    #contact input, #contact textarea {
-      width: 300px; padding: 10px; margin: 8px 0; border-radius: 10px;
-      border: 1px solid rgba(180,114,255,0.4); background: rgba(30, 0, 60, 0.3); color: #fff;
-      resize: none;
+    p {
+      font-size: 1.2rem;
+      color: #ccc;
+      margin-top: 15px;
+      max-width: 600px;
+      animation: fadeIn 2s ease;
     }
-    #contact input:focus, #contact textarea:focus { outline: none; box-shadow: 0 0 10px #b472ff; }
-    footer { color: rgba(255,255,255,0.3); font-size: 0.8rem; text-align: center; padding: 30px 0; }
 
-    /* --- Scroll Reveal --- */
-    .hidden { opacity: 0; transform: translateY(40px); transition: 1s ease; }
-    .show { opacity: 1; transform: translateY(0); }
+    .button {
+      margin-top: 30px;
+      padding: 12px 28px;
+      border: 2px solid #fff;
+      border-radius: 10px;
+      color: #fff;
+      background: transparent;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      animation: fadeIn 2.5s ease;
+    }
+
+    .button:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.05);
+    }
+
+    footer {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.9rem;
+      color: #777;
+      letter-spacing: 1px;
+    }
+
+    audio {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
-  <div class="grid-bg"></div>
-  <div class="particles"></div>
+  <div class="background" id="background"></div>
+  <div class="glow"></div>
 
-  <nav>
-    <ul>
-      <li><a href="#hero" class="active">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#tech">Tech</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
+  <img class="pfp" src="https://media.tenor.com/MRboc8Cj1w8AAAAi/cat-meme-hehehe-mwehehe.gif" alt="Vyntrix Profile" />
 
-  <section id="hero">
-    <div class="avatar">
-      <img src="https://media.tenor.com/PXRVXxJeyh8AAAAM/cat-meme-hehehe-mwehehe.gif" alt="Vyntrix Avatar" />
-    </div>
-    <h1>VYNTRIX</h1>
-    <div class="typewriter">Developer and Coder</div>
-    <div style="margin-top:30px; display:flex; gap:15px; flex-wrap:wrap; justify-content:center;">
-      <a href="https://discord.gg/7qN7BypAej" class="btn">Discord</a>
-      <a href="https://github.com/Could-Be-Ren/vyntrix-site" class="btn">GitHub</a>
-      <a href="#" class="btn" id="copyEmail">Copy Email</a>
-    </div>
-  </section>
+  <h1>Hey, I'm Vyntrix</h1>
+  <p>I'm a coder mainly focusing on C++ and Python, and I'm currently in college.</p>
 
-  <section id="about" class="hidden">
-    <h2>About Me</h2>
-    <p>I’m <b>VYNTRIX</b> — a developer passionate about building systems that mix creativity and logic.  
-       My focus lies in backend development, AI systems, and immersive digital interfaces.  
-       I love pushing the boundaries of code and design.</p>
-  </section>
+  <button class="button" onclick="window.location.href='#';">Learn More</button>
 
-  <section id="projects" class="hidden">
-    <h2>Projects</h2>
-    <div class="projects">
-      <div class="project">
-        <img src="https://source.unsplash.com/400x300/?code,terminal" alt="Project 1" />
-        <div class="project-info">
-          <h3>AI Automation Suite</h3>
-          <p>Multi-agent control system built with Python and Node.js.</p>
-          <a href="#">View on GitHub →</a>
-        </div>
-      </div>
-      <div class="project">
-        <img src="https://source.unsplash.com/400x300/?website,design" alt="Project 2" />
-        <div class="project-info">
-          <h3>Personal Site</h3>
-          <p>The glowing interactive portfolio you’re viewing now.</p>
-          <a href="#">View on GitHub →</a>
-        </div>
-      </div>
-      <div class="project">
-        <img src="https://source.unsplash.com/400x300/?database,network" alt="Project 3" />
-        <div class="project-info">
-          <h3>Data Engine</h3>
-          <p>Optimized database manager for scalable applications.</p>
-          <a href="#">View on GitHub →</a>
-        </div>
-      </div>
-    </div>
-  </section>
+  <footer>© 2025 Vyntrix. All rights reserved.</footer>
 
-  <section id="tech" class="hidden">
-    <h2>Tech Stack</h2>
-    <div class="tech-stack">
-      <div class="tech">Python</div>
-      <div class="tech">C++</div>
-      <div class="tech">C#</div>
-      <div class="tech">MongoDB</div>
-      <div class="tech">PostgreSQL</div>
-      <div class="tech">MySQL</div>
-      <div class="tech">HTML / CSS</div>
-      <div class="tech">JavaScript</div>
-      <div class="tech">Next.js</div>
-      <div class="tech">AI & MCP</div>
-    </div>
-  </section>
-
-  <section id="contact" class="hidden">
-    <h2>Contact</h2>
-    <p>Let’s connect — I’m always open to new ideas and collaborations.</p>
-    <div class="buttons">
-      <a href="https://discord.gg/7qN7BypAej" class="btn">Join Discord</a>
-      <a href="#" class="btn" id="copyEmail2">Copy Email</a>
-    </div>
-  </section>
-
-  <footer>© 2025 VYNTRIX. All rights reserved.</footer>
+  <audio id="bgMusic" autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_552cb10b3d.mp3?filename=ethereal-dreamscape-10349.mp3" type="audio/mpeg">
+  </audio>
 
   <script>
-    // --- Copy Email ---
-    const copyButtons = [document.getElementById('copyEmail'), document.getElementById('copyEmail2')];
-    copyButtons.forEach(btn => btn?.addEventListener('click', () => {
-      navigator.clipboard.writeText('vyntrix@example.com');
-      alert('Email copied to clipboard!');
-    }));
-
-    // --- Scroll Reveal ---
-    const hiddenEls = document.querySelectorAll('.hidden');
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('show');
-      });
-    }, { threshold: 0.2 });
-    hiddenEls.forEach(el => observer.observe(el));
-
-    // --- Active Navbar Highlight ---
-    const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('nav a');
-    window.addEventListener('scroll', () => {
-      let current = '';
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop - 150;
-        if (pageYOffset >= sectionTop) current = section.getAttribute('id');
-      });
-      navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === '#' + current) link.classList.add('active');
-      });
+    // Parallax
+    const bg = document.getElementById("background");
+    document.addEventListener("mousemove", (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 20;
+      const y = (e.clientY / window.innerHeight - 0.5) * 20;
+      bg.style.transform = `translate(${x}px, ${y}px) scale(1.1)`;
     });
 
-    // --- Generate Particles ---
-    const particleContainer = document.querySelector('.particles');
-    for (let i = 0; i < 40; i++) {
-      const p = document.createElement('div');
-      p.classList.add('particle');
-      const size = Math.random() * 4 + 2;
-      p.style.width = `${size}px`;
-      p.style.height = `${size}px`;
-      p.style.left = `${Math.random() * 100}%`;
-      p.style.top = `${Math.random() * 100}%`;
-      p.style.animationDuration = `${10 + Math.random() * 20}s`;
-      particleContainer.appendChild(p);
-    }
+    // Music autoplay with fallback
+    window.addEventListener("click", () => {
+      const audio = document.getElementById("bgMusic");
+      if (audio.paused) audio.play().catch(() => {});
+    });
   </script>
 </body>
 </html>
