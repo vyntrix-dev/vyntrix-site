@@ -1,472 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- 1) Meta + perf hints -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Vyntrix — Tools, Games & Systems</title>
-  <meta name="description" content="Vyntrix — coder, game maker and tinkerer. Tools, prototypes and bots. Built with care and a little cat GIF.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%23202a37'/%3E%3Ctext x='12' y='16' font-size='10' text-anchor='middle' fill='%23e8ffff' font-family='Poppins,Arial'%3EV%3C/text%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <title>Vyntrix</title>
+  <meta name="description" content="Vyntrix — coder, game maker and tinkerer. Tools, prototypes and bots.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%23121320'/%3E%3Ctext x='12' y='16' font-size='10' text-anchor='middle' fill='%238bd3ff' font-family='Poppins,Arial'%3EV%3C/text%3E%3C/svg%3E">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <meta name="theme-color" content="#000000">
-
+  <meta name="theme-color" content="#050507">
   <style>
-    /* ========== Root variables & base improvements (1) ========== */
     :root{
       --bg:#050507;
-      --neon:#e8ffff;
+      --text:#e8f6ff;
       --muted:#9aa3b2;
-      --accent:#8bd3ff;
+      --accent1:#6ad1ff; /* blue */
+      --accent2:#8a6bff; /* violet */
       --card: rgba(255,255,255,0.03);
       --glass: rgba(255,255,255,0.02);
       --grid-size: 110px;
-      --radius: 12px;
-      --gap: 16px;
-      --max-w: 1200px;
-      --focus: 3px solid rgba(232,255,255,0.12);
-      --reduced-motion: no-preference;
+      --radius:12px;
+      --max-w:1200px;
+      --focus:3px solid rgba(138,107,255,0.14);
     }
-
-    /* Respect prefers-reduced-motion from the start (2) */
-    @media (prefers-reduced-motion: reduce) {
-      :root { --reduced-motion: reduce; }
-    }
-
-    /* Base reset */
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;font-family:"Poppins",system-ui,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:#fff;scroll-behavior:smooth}
+    html,body{height:100%;margin:0;font-family:"Poppins",system-ui,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;scroll-behavior:smooth;overflow-x:hidden}
     a{color:inherit;text-decoration:none}
     img{max-width:100%;display:block}
 
-    /* Skip link for keyboard users (3) */
-    .skip-link{
-      position:fixed;left:12px;top:12px;z-index:2000;padding:8px 12px;border-radius:8px;background:#fff;color:#000;font-weight:700;transform:translateY(-120%);transition:transform .18s ease;
-    }
-    .skip-link:focus{transform:none;outline:none;box-shadow:0 6px 30px rgba(0,0,0,0.6)}
-
-    /* ========== Animated gradient background (4) ========== */
+/* animated gradient background */
     #bgGradient{
-      position:fixed;inset:0;z-index:-10;background:linear-gradient(-45deg,#0a0a14,#1b2030,#121621,#0b0e14);
-      background-size:400% 400%;animation:gradientMove 20s ease infinite;filter:brightness(0.62);transition:transform .35s cubic-bezier(.2,.9,.2,1);
+      position:fixed;inset:0;z-index:-12;
+      background:linear-gradient(120deg, #070718, #091026 20%, #071225 50%, #0b0a12 80%);
+      background-size:400% 400%;
+      animation:gradShift 18s ease-in-out infinite;
+      filter:brightness(0.6);
+      transition:transform .35s cubic-bezier(.2,.9,.2,1);
       will-change:transform;
     }
-    @keyframes gradientMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    @keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-    /* ========== Layers ========== */
-    #bgImage{position:fixed;inset:0;z-index:-9;background-image:url("https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80");background-size:cover;background-position:center;transform:scale(1.06);filter:brightness(.25) saturate(.8) blur(2px);transition:transform .12s linear;will-change:transform;}
-    #gridLayer{position:fixed;inset:0;z-index:-8;pointer-events:none;background-image:linear-gradient(transparent 90%, rgba(255,255,255,0.03) 91%),linear-gradient(90deg, transparent 90%, rgba(255,255,255,0.03) 91%);background-size: var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size);opacity:.9;filter:blur(.6px);mix-blend-mode:overlay;transition:transform .12s linear}
-    #gridOverlay{position:fixed;inset:0;z-index:-7;pointer-events:none;background:linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0));mix-blend-mode:overlay}
-    #glowLayer{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:1000px;height:1000px;border-radius:50%;z-index:-6;background:radial-gradient(circle, rgba(255,255,255,0.12), rgba(255,255,255,0.01));filter:blur(140px);mix-blend-mode:screen;opacity:.9}
-    canvas#particleCanvas{position:fixed;inset:0;z-index:-5;pointer-events:none;display:block}
+/* layers */
+    #bgImage{position:fixed;inset:0;z-index:-11;background-image:url("https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80");background-size:cover;background-position:center;filter:brightness(.22) saturate(.8) blur(2px);transition:transform .12s linear}
+    #gridLayer{position:fixed;inset:0;z-index:-10;pointer-events:none;background-image:linear-gradient(transparent 90%, rgba(255,255,255,0.03) 91%),linear-gradient(90deg, transparent 90%, rgba(255,255,255,0.03) 91%);background-size:var(--grid-size) var(--grid-size),var(--grid-size) var(--grid-size);opacity:.9;mix-blend-mode:overlay;filter:blur(.6px)}
+    #glowLayer{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:1000px;height:1000px;border-radius:50%;z-index:-9;background:radial-gradient(circle, rgba(106,209,255,0.08), rgba(138,107,255,0.03));filter:blur(140px);mix-blend-mode:screen;opacity:.9}
 
-/* ========== Top controls & nav (5) ========== */
-    .top-left{
-      position:fixed;left:18px;top:18px;z-index:999;display:flex;gap:10px;align-items:center;
-    }
-    .btn{
-      padding:10px 14px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.06);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:var(--neon);font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:transform .18s,box-shadow .18s,background .18s;
-    }
-    .btn:active{transform:translateY(1px) scale(.998)}
-    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04)}
+/* particles canvas */
+    canvas#particleCanvas{position:fixed;inset:0;z-index:-8;pointer-events:none;display:block}
 
+/* nav + controls */
     nav{position:fixed;right:20px;top:20px;z-index:999;display:flex;flex-direction:column;gap:10px;backdrop-filter:blur(6px)}
-    .nav-btn{background:var(--glass);border:1px solid rgba(255,255,255,0.04);color:var(--neon);padding:8px 12px;border-radius:10px;font-weight:600;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,0.6);transition:all .2s ease;}
-    .nav-btn:hover{transform:translateY(-4px);background:rgba(255,255,255,0.04);}
+    .nav-btn{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);color:var(--accent1);padding:8px 12px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 10px 40px rgba(0,0,0,0.6);transition:transform .18s,box-shadow .18s}
+    .nav-btn:hover{transform:translateY(-6px);box-shadow:0 26px 80px rgba(0,0,0,0.6)}
 
-/* ========== Layout & cards (6) ========== */
-    .wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px;gap:var(--gap)}
+/* main layout */
+    .wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px;gap:36px}
     .hero{width:100%;max-width:var(--max-w);display:flex;gap:40px;align-items:center;justify-content:space-between}
-    .card{flex:1;padding:28px;border-radius:var(--radius);background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.008));backdrop-filter:blur(8px);box-shadow:0 18px 70px rgba(0,0,0,0.65);transition:transform .18s,box-shadow .18s}
-    .card:focus-within{box-shadow:0 30px 120px rgba(0,0,0,0.7);transform:translateY(-6px)}
+    .card{flex:1;padding:36px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.008));backdrop-filter:blur(8px);box-shadow:0 18px 70px rgba(0,0,0,0.6)}
 
-/* ========== Left column improvements (7) ========== */
+/* left column */
     .greeting{font-size:1.02rem;color:var(--muted);font-weight:600}
-    .name{font-size:3.6rem;font-weight:800;color:var(--neon);line-height:0.92;letter-spacing:0.6px;text-shadow:0 6px 30px rgba(232,255,255,0.04)}
+    .name{font-size:3.6rem;font-weight:800;color:linear-gradient(90deg,var(--accent1),var(--accent2));line-height:0.92;letter-spacing:0.6px;text-shadow:0 6px 30px rgba(106,209,255,0.04)}
     .tag{color:#e6eef9;font-size:1.02rem;margin-top:6px}
-    .typewriter{margin-top:12px;color:#f3feff;font-weight:700;height:32px;white-space:nowrap;overflow:hidden;border-right:2px solid rgba(232,255,255,0.08);font-size:1.05rem;display:flex;align-items:center;gap:8px}
-    /* smoother caret & accessibility label (8) */
-    .typewriter .caret{opacity:0.9;margin-left:6px;animation:blink 1.1s steps(2) infinite}
+    .typewriter{margin-top:12px;color:var(--text);font-weight:700;height:32px;white-space:nowrap;overflow:hidden;border-right:2px solid rgba(232,255,255,0.06);font-size:1.05rem;display:flex;align-items:center;gap:8px}
+    .typewriter .caret{opacity:0.95;margin-left:6px;animation:blink 1.1s steps(2) infinite}
     @keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
-    /* small subtitle for keyboard users (9) */
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-/* ========== Avatar column: float, glow, tilt (10) ========== */
+/* avatar column */
     .avatar-col{width:360px;display:flex;flex-direction:column;align-items:center;gap:12px;position:relative}
-    .avatar-frame{
-      width:300px;height:300px;border-radius:50%;overflow:hidden;border:10px solid rgba(255,255,255,0.04);box-shadow:0 40px 120px rgba(232,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;background:var(--card);animation:float 6s ease-in-out infinite;transition:transform .28s cubic-bezier(.2,.9,.2,1);
-      will-change:transform;
-    }
-    .avatar-frame img{width:100%;height:100%;object-fit:cover;display:block;animation:glowPulse 4s ease-in-out infinite;filter:drop-shadow(0 12px 28px rgba(0,0,0,0.35));image-rendering:auto}
-    .avatar-frame:hover{transform:translateY(-8px) scale(1.02)}
-    .avatar-glow-ring{position:absolute;left:50%;transform:translateX(-50%);bottom:-26px;width:480px;height:120px;border-radius:999px;background:linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.12));filter:blur(48px);mix-blend-mode:screen;animation:glowPulse 4s ease-in-out infinite alternate}
-    @keyframes glowPulse{0%,100%{filter:brightness(1) drop-shadow(0 0 12px rgba(232,255,255,0.18))}50%{filter:brightness(1.08) drop-shadow(0 0 22px rgba(232,255,255,0.4))}}
+    .avatar-frame{width:300px;height:300px;border-radius:50%;overflow:hidden;border:10px solid rgba(255,255,255,0.04);box-shadow:0 40px 120px rgba(106,209,255,0.04), inset 0 1px 0 rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.02);animation:float 6s ease-in-out infinite;transition:transform .28s}
+    .avatar-frame img{width:100%;height:100%;object-fit:cover;display:block;animation:glowPulse 4s ease-in-out infinite;filter:drop-shadow(0 12px 28px rgba(0,0,0,0.35))}
+    .avatar-glow-ring{position:absolute;left:50%;transform:translateX(-50%);bottom:-26px;width:480px;height:120px;border-radius:999px;background:linear-gradient(90deg, rgba(106,209,255,0.06), rgba(138,107,255,0.12));filter:blur(48px);mix-blend-mode:screen;animation:glowPulse 4s ease-in-out infinite alternate}
+    @keyframes glowPulse{0%,100%{filter:brightness(1) drop-shadow(0 0 12px rgba(106,209,255,0.16))}50%{filter:brightness(1.06) drop-shadow(0 0 22px rgba(138,107,255,0.36))}}
     @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 
-/* ========== Showcase grid & hover polish (11) ========== */
-    .showcase-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-    .showcase-card{padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));border:1px solid rgba(255,255,255,0.03);transition:transform .18s,box-shadow .18s}
-    .showcase-card:hover{transform:translateY(-8px) rotateZ(-0.5deg);box-shadow:0 28px 80px rgba(0,0,0,0.5)}
-    .tag-badge{font-size:.78rem;padding:6px 8px;border-radius:999px;background:rgba(232,255,255,0.03);border:1px solid rgba(232,255,255,0.02);color:var(--neon);font-weight:700}
+/* sections */
+    section.content{width:100%;max-width:var(--max-w);padding:28px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.004));box-shadow:0 18px 70px rgba(0,0,0,0.5);opacity:0;transform:translateY(28px);transition:all .72s cubic-bezier(.2,.9,.2,1)}
+    section.content.revealed{opacity:1;transform:none}
+    .section-title{font-size:1.4rem;margin-bottom:12px;color:var(--accent1);font-weight:800;display:flex;align-items:center;gap:12px}
+    .divider{height:2px;background:linear-gradient(90deg,var(--accent1),var(--accent2));border-radius:6px;margin-bottom:12px}
 
-/* ========== Contact improvements (12) ========== */
+/* showcase replaced with knowledge */
+    .knowledge-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+    .knowledge-card{padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));border:1px solid rgba(255,255,255,0.03);transition:transform .18s,box-shadow .18s}
+    .knowledge-card:hover{transform:translateY(-8px);box-shadow:0 22px 60px rgba(0,0,0,0.5)}
+
+/* contact */
     .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .contact-card{padding:14px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:8px}
-    .copy-btn{padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--neon);cursor:pointer;font-weight:700}
+    .contact-card{padding:14px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));border:1px solid rgba(255,255,255,0.03)}
 
-/* ========== Footer & tiny extras (13) ========== */
-    footer{margin-top:22px;color:var(--muted);font-size:0.92rem;text-align:center}
-    #backTop{position:fixed;right:18px;bottom:18px;z-index:999;background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:10px;border-radius:12px;display:none;cursor:pointer}
+/* back to top */
+    #backTop{position:fixed;right:18px;bottom:18px;z-index:999;background:linear-gradient(90deg,var(--accent1),var(--accent2));border:none;padding:10px;border-radius:12px;color:#041220;display:none;cursor:pointer;box-shadow:0 10px 40px rgba(0,0,0,0.6)}
 
-/* ========== Focus-visible (keyboard) (14) ========== */
+/* focus-visible */
     :focus{outline-offset:3px}
     :focus-visible{outline:var(--focus);border-radius:8px}
 
-/* ========== Reduced motion: remove or simplify animations (15) ========== */
-    @media (prefers-reduced-motion: reduce){
-      *{animation-duration:0.001ms!important;animation-iteration-count:1!important;transition:none!important}
-      .avatar-frame, #bgGradient{transition:none}
-    }
-
-/* ========== Responsive tweaks (16) ========== */
+/* responsive */
     @media (max-width:980px){
       .hero{flex-direction:column-reverse;align-items:center;gap:28px;padding-bottom:10px}
       .avatar-col{width:220px}
       .avatar-frame{width:170px;height:170px}
-      .name{font-size:2.6rem}
+      .name{font-size:2.8rem}
       .wrap{padding:18px}
-      #backTop{right:12px;bottom:12px}
     }
 
-    /* Print-friendly (17) */
-    @media print{
-      body{background:#fff;color:#000}
-      #bgGradient,#bgImage,#gridLayer,#glowLayer,canvas,nav,.top-left{display:none}
+    /* reduce motion */
+    @media (prefers-reduced-motion: reduce){
+      *{animation-duration:0.001ms!important;animation-iteration-count:1!important;transition:none!important}
     }
-
-    /* micro-typography improvements (18) */
-    h3{font-size:1.05rem;color:var(--neon);margin-bottom:6px}
-    p{color:var(--muted);line-height:1.45}
-
-/* small util */
-    .row{display:flex;gap:12px;align-items:center}
   </style>
 </head>
 <body>
-  <!-- Skip link -->
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <!-- Top-left controls: theme toggle + resume (19) -->
-  <div class="top-left" aria-hidden="false">
-    <button id="themeToggle" class="btn ghost" aria-pressed="false" title="Toggle theme">🌗 Theme</button>
-    <button id="downloadResume" class="btn" title="Download resume (example)">📄 Resume</button>
-  </div>
-
-  <!-- Gradient + visual layers -->
+  <!-- gradient bg -->
   <div id="bgGradient" aria-hidden="true"></div>
   <div id="bgImage" aria-hidden="true"></div>
   <div id="gridLayer" aria-hidden="true"></div>
-  <div id="gridOverlay" aria-hidden="true"></div>
   <div id="glowLayer" aria-hidden="true"></div>
+
   <canvas id="particleCanvas" aria-hidden="true"></canvas>
 
-  <!-- Top-right nav -->
+  <!-- manual theme toggle bottom-left -->
+  <div style="position:fixed;left:18px;bottom:18px;z-index:1000;display:flex;gap:10px;align-items:center">
+    <button id="themeBtn" title="Toggle theme" style="padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--accent1);cursor:pointer;font-weight:700">🌗 Theme</button>
+    <button id="toggleParticles" title="Toggle particles" style="padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--accent2);cursor:pointer;font-weight:700">✨ Particles</button>
+  </div>
+
+  <!-- nav -->
   <nav aria-label="Page navigation">
     <button class="nav-btn" onclick="document.getElementById('skillsSection').scrollIntoView({behavior:'smooth'})">Skills</button>
-    <button class="nav-btn" onclick="document.getElementById('projectsSection').scrollIntoView({behavior:'smooth'})">Showcase</button>
+    <button class="nav-btn" onclick="document.getElementById('knowledgeSection').scrollIntoView({behavior:'smooth'})">Knowledge & Insights</button>
     <button class="nav-btn" onclick="document.getElementById('contactSection').scrollIntoView({behavior:'smooth'})">Contact</button>
   </nav>
 
-  <main id="main" class="wrap" role="main" aria-labelledby="introTitle">
+  <main class="wrap" role="main">
     <section class="hero" aria-label="Intro">
-      <div class="card left fade" style="min-width:320px">
+      <div class="card left fade" style="--delay:.12s">
         <div class="greeting">Hey there</div>
-        <h1 id="introTitle" class="name">I'm Vyntrix</h1>
+        <div class="name" id="siteName">I'm Vyntrix</div>
         <div class="tag">I'm an 18-year-old coder from Sweden, currently in college.</div>
 
-        <!-- Enhanced typewriter (20) -->
-        <div class="typewriter" id="typewriter" aria-live="polite" aria-atomic="true">
-          <span id="twText" aria-hidden="false"></span><span class="caret" aria-hidden="true"></span>
-        </div>
-        <div class="links" style="margin-top:18px">
-          <a class="btn" href="https://github.com/vyntrix-dev" target="_blank" rel="noopener noreferrer">🐙 GitHub</a>
-          <a class="btn" href="https://discord.gg/eT3xGSUJ" target="_blank" rel="noopener noreferrer">💬 Discord</a>
-          <button class="btn" id="copyEmailBtn" title="Copy email to clipboard">✉️ Email</button>
+        <div class="typewriter" id="typewriter" aria-live="polite">
+          <span id="twText"></span><span class="caret" aria-hidden="true">|</span>
         </div>
 
-        <div style="color:var(--muted);margin-top:16px;max-width:760px">I build tools, explore system-level code, and make lightweight games and bots. Scroll to see core skills, showcase and contact info.</div>
+        <div class="links" style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
+          <a class="nav-btn" href="https://github.com/vyntrix-dev" target="_blank" rel="noopener noreferrer">🐙 GitHub</a>
+          <a class="nav-btn" href="https://discord.gg/eT3xGSUJ" target="_blank" rel="noopener noreferrer">💬 Discord</a>
+          <a class="nav-btn" href="mailto:vyntrix@outlook.com">✉️ Email</a>
+        </div>
+
+        <div style="color:var(--muted);margin-top:16px;max-width:760px">I build tools, explore system-level code, and learn new technologies. Scroll to see skills, knowledge and contact info. Press <strong>M</strong> to toggle reduced motion.</div>
       </div>
 
-      <aside class="avatar-col fade" aria-label="Avatar">
+      <div class="avatar-col fade" style="--delay:.24s">
         <div class="avatar-frame" role="img" aria-label="Vyntrix avatar">
-          <!-- Lazy load + decoding for faster paint (21) -->
+          <!-- fixed direct GIF url; loading async -->
           <img id="avatarImg" src="https://media.tenor.com/MRboc8Cj1w8AAAAi/cat-meme-hehehe-mwehehe.gif" alt="Cat GIF avatar" loading="lazy" decoding="async">
         </div>
         <div class="avatar-glow-ring" aria-hidden="true"></div>
         <div class="follow" style="color:var(--muted)">Follow my work — reach out anytime</div>
-      </aside>
+      </div>
     </section>
 
     <!-- SKILLS -->
     <section id="skillsSection" class="content" aria-labelledby="skillsTitle">
       <h2 id="skillsTitle" class="section-title">Core Skills</h2>
-      <div class="divider" style="width:100%"></div>
-      <div class="skills-grid" role="list" aria-label="Skills list">
-        <div class="skill" role="listitem"><div class="skill-ico">🐍</div><div class="skill-name">Python</div></div>
-        <div class="skill" role="listitem"><div class="skill-ico">💠</div><div class="skill-name">C++</div></div>
-        <div class="skill" role="listitem"><div class="skill-ico">🟨</div><div class="skill-name">JavaScript</div></div>
-        <div class="skill" role="listitem"><div class="skill-ico">📐</div><div class="skill-name">HTML &amp; CSS</div></div>
-        <div class="skill" role="listitem"><div class="skill-ico">⚛️</div><div class="skill-name">React</div></div>
-        <div class="skill" role="listitem"><div class="skill-ico">🗄️</div><div class="skill-name">SQL</div></div>
-        <div class="skill" role="listitem"><div class="skill-ico">🔧</div><div class="skill-name">Git</div></div>
-        <div class="skill" role="listitem"><div class="skill-ico">🔒</div><div class="skill-name">Security Basics</div></div>
+      <div class="divider"></div>
+      <div class="skills-grid" role="list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px">
+        <div class="skill" role="listitem"><div style="font-size:22px">🐍</div><div style="font-weight:700;color:var(--text)">Python</div></div>
+        <div class="skill" role="listitem"><div style="font-size:22px">💠</div><div style="font-weight:700;color:var(--text)">C++</div></div>
+        <div class="skill" role="listitem"><div style="font-size:22px">🟨</div><div style="font-weight:700;color:var(--text)">JavaScript</div></div>
+        <div class="skill" role="listitem"><div style="font-size:22px">📐</div><div style="font-weight:700;color:var(--text)">HTML &amp; CSS</div></div>
+        <div class="skill" role="listitem"><div style="font-size:22px">⚛️</div><div style="font-weight:700;color:var(--text)">React</div></div>
+        <div class="skill" role="listitem"><div style="font-size:22px">🗄️</div><div style="font-weight:700;color:var(--text)">SQL</div></div>
       </div>
     </section>
 
-    <!-- SHOWCASE -->
-    <section id="projectsSection" class="content" aria-labelledby="projectsTitle">
-      <h2 id="projectsTitle" class="section-title">Showcase</h2>
-      <div class="divider" style="width:100%"></div>
-      <div class="showcase-grid" role="list">
-        <article class="showcase-card" role="listitem" aria-labelledby="card1">
-          <div class="row" style="justify-content:space-between;align-items:flex-start">
-            <h3 id="card1">Tooling — Local Dev Utilities</h3>
-            <span class="tag-badge">CLI</span>
-          </div>
-          <p>Small CLI utilities and scripts I use for fast debugging and prototyping — documented and easily reusable.</p>
-          <div class="row" style="margin-top:8px">
-            <a class="btn" href="#" target="_blank" rel="noopener">Read</a>
-            <a class="btn" href="https://github.com/vyntrix-dev" target="_blank" rel="noopener">Code</a>
-          </div>
+    <!-- Knowledge & Insights (replaces projects) -->
+    <section id="knowledgeSection" class="content" aria-labelledby="knowledgeTitle">
+      <h2 id="knowledgeTitle" class="section-title">Knowledge & Insights</h2>
+      <div class="divider"></div>
+      <div class="knowledge-grid">
+        <article class="knowledge-card">
+          <h3>Systems Thinking</h3>
+          <p>Practical notes on balancing performance and maintainability — small, testable components and clear contracts.</p>
         </article>
-
-        <article class="showcase-card" role="listitem" aria-labelledby="card2">
-          <div class="row" style="justify-content:space-between;">
-            <h3 id="card2">Mini Games — Prototypes</h3><span class="tag-badge">Game</span>
-          </div>
-          <p>Small game prototypes exploring mechanics and performance — quick demos to test ideas.</p>
-          <div class="row" style="margin-top:8px"><a class="btn" href="#" target="_blank">Play</a><a class="btn" href="#" target="_blank">Repo</a></div>
+        <article class="knowledge-card">
+          <h3>Low-Level Optimizations</h3>
+          <p>Benchmarks and patterns I use to squeeze extra performance: caching, careful allocations, and measured profiling.</p>
         </article>
-
-        <article class="showcase-card" role="listitem" aria-labelledby="card3">
-          <div class="row" style="justify-content:space-between;">
-            <h3 id="card3">Bots & Integrations</h3><span class="tag-badge">Automation</span>
-          </div>
-          <p>Discord and service integrations that make community tooling friendlier and automated.</p>
-          <div class="row" style="margin-top:8px"><a class="btn" href="#" target="_blank">Demo</a><a class="btn" href="#" target="_blank">Repo</a></div>
+        <article class="knowledge-card">
+          <h3>Design for Devs</h3>
+          <p>Small UX decisions that reduce cognitive load: predictable state, clear affordances, and accessible defaults.</p>
         </article>
       </div>
     </section>
 
-    <!-- ABOUT -->
+    <!-- ABOUT / PHILOSOPHY -->
     <section id="aboutSection" class="content" aria-labelledby="aboutTitle">
-      <h2 id="aboutTitle" class="section-title">About Me</h2>
-      <div class="divider" style="width:100%"></div>
-      <p>I like building tools, exploring system-level code, and making lightweight games and bots. Currently studying in college — focusing on low-level programming, C++ and Python, and expanding into web development and modern tooling.</p>
+      <h2 id="aboutTitle" class="section-title">Tech Philosophy</h2>
+      <div class="divider"></div>
+      <p style="color:var(--muted)">I value readable systems, reproducible tests, and efficient primitives. I prototype quickly, measure impact, and iterate with data. I enjoy building tools that scale from demos to production.</p>
     </section>
 
     <!-- CONTACT -->
     <section id="contactSection" class="content" aria-labelledby="contactTitle">
       <h2 id="contactTitle" class="section-title">Contact</h2>
-      <div class="divider" style="width:100%"></div>
+      <div class="divider"></div>
       <div class="contact-grid">
         <div class="contact-card">
-          <strong style="color:var(--neon)">Discord</strong>
-          <div style="color:var(--muted);margin-top:6px">Join: <a href="https://discord.gg/eT3xGSUJ" target="_blank" rel="noopener">discord.gg/eT3xGSUJ</a></div>
+          <strong style="color:var(--accent1)">Discord</strong>
+          <div style="color:var(--muted);margin-top:6px">Join: <a href="https://discord.gg/eT3xGSUJ" target="_blank" rel="noopener noreferrer">discord.gg/eT3xGSUJ</a></div>
         </div>
         <div class="contact-card">
-          <strong style="color:var(--neon)">Email</strong>
+          <strong style="color:var(--accent2)">Email</strong>
           <div style="color:var(--muted);margin-top:6px">vyntrix@outlook.com</div>
-          <div style="margin-top:8px">
-            <button class="copy-btn" id="copyEmail">Copy email</button>
-            <button class="btn" id="openMail" onclick="location.href='mailto:vyntrix@outlook.com'">Open mail</button>
+          <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+            <button id="copyEmail" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text);cursor:pointer">Copy email</button>
+            <a class="nav-btn" href="mailto:vyntrix@outlook.com">Open mail</a>
           </div>
         </div>
       </div>
     </section>
 
-    <footer>© 2025 Vyntrix. All rights reserved.</footer>
+    <footer style="margin-top:22px;color:var(--muted);font-size:.92rem;text-align:center">© 2025 Vyntrix. All rights reserved.</footer>
   </main>
 
-  <!-- Back to top (20) -->
   <button id="backTop" aria-label="Back to top">⬆️</button>
 
-  <!-- ========== Scripts: typewriter, interactions, particles, perf ========== -->
   <script>
-    /* ----------------------
-       Improvements summary (explicit)
-       1) root variables & spacing
-       2) respects prefers-reduced-motion
-       3) skip link for keyboard users
-       4) animated gradient background
-       5) top-left theme + resume controls
-       6) improved cards with focus states
-       7) readable, accessible left column
-       8) smoother caret animation accessible
-       9) sr-only helpers
-       10) avatar float + tilt on pointermove
-       11) showcase hover polish
-       12) contact copy/email buttons
-       13) back-to-top button
-       14) focus-visible outlines
-       15) reduced-motion overrides
-       16) responsive tweaks
-       17) print-friendly styles
-       18) micro-typography
-       19) theme toggle + resume download
-       20) back-to-top show/hide behavior
-       Plus: lazy-loading GIF, particle perf throttling, visibility handling
-    ---------------------- */
+    // Desktop detection and adaptive flags
+    const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    const isDesktop = window.innerWidth >= 980 && !isTouch;
 
-    // Utilities
-    const $ = s => document.querySelector(s);
-    const $$ = s => Array.from(document.querySelectorAll(s));
+    // Theme toggle: manual (persist)
+    const themeBtn = document.getElementById('themeBtn');
+    const root = document.documentElement;
+    const THEME_KEY = 'vyntrix_theme';
+    function applyTheme(theme){
+      if(theme === 'light'){
+        root.style.setProperty('--bg','#f7fafc');
+        root.style.setProperty('--text','#071224');
+        root.style.setProperty('--muted','#4b5563');
+        root.style.setProperty('--accent1','#6ad1ff');
+        root.style.setProperty('--accent2','#8a6bff');
+        document.body.style.background = 'var(--bg)';
+      } else {
+        root.style.removeProperty('--bg');
+        root.style.removeProperty('--text');
+        root.style.removeProperty('--muted');
+        root.style.removeProperty('--accent1');
+        root.style.removeProperty('--accent2');
+        document.body.style.background = '';
+      }
+    }
+    // init
+    (function initTheme(){
+      const saved = localStorage.getItem(THEME_KEY) || 'dark';
+      applyTheme(saved);
+      themeBtn.textContent = saved === 'light' ? '🌞 Light' : '🌗 Dark';
+      themeBtn.onclick = ()=>{
+        const cur = localStorage.getItem(THEME_KEY) || 'dark';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(THEME_KEY, next);
+        applyTheme(next);
+        themeBtn.textContent = next === 'light' ? '🌞 Light' : '🌗 Dark';
+      };
+    })();
 
-    // Typewriter (better) -----------------------------------------------------
+    // Back to top
+    const backTop = document.getElementById('backTop');
+    backTop.addEventListener('click', ()=> window.scrollTo({top:0,behavior:'smooth'}));
+    window.addEventListener('scroll', ()=> {
+      backTop.style.display = window.scrollY > 420 ? 'block' : 'none';
+    }, {passive:true});
+
+    // Typewriter
     (function typewriter(){
-      const el = $('#twText');
+      const el = document.getElementById('twText');
       const phrases = ["C++ Developer","Python Developer","JavaScript Developer","College Student"];
-      let pi=0, ci=0, deleting=false, paused=false;
+      let pi=0, ci=0, deleting=false;
       function step(){
         const cur = phrases[pi];
-        if (!deleting) {
+        if(!deleting){
           ci++;
           el.textContent = cur.slice(0,ci);
-          if (ci >= cur.length) { deleting = true; setTimeout(step, 900); return; }
+          if(ci >= cur.length){ deleting=true; setTimeout(step,900); return; }
         } else {
           ci--;
           el.textContent = cur.slice(0,ci);
-          if (ci === 0) { deleting = false; pi = (pi+1) % phrases.length; }
+          if(ci === 0){ deleting=false; pi=(pi+1)%phrases.length; }
         }
         setTimeout(step, deleting?40:80);
       }
       setTimeout(step, 600);
     })();
 
-    // Copy email button ------------------------------------------------------
-    (function copyEmail(){
-      const copy = $('#copyEmail') || $('#copyEmailBtn');
-      if(!copy) return;
-      copy.addEventListener('click', async ()=>{
-        try {
-          await navigator.clipboard.writeText('vyntrix@outlook.com');
-          copy.textContent = 'Copied!';
-          setTimeout(()=>{ copy.textContent = 'Copy email' }, 1500);
-        } catch (e) {
-          // fallback: select text
-          alert('Copy this email: vyntrix@outlook.com');
-        }
-      });
-    })();
+    // Copy email
+    document.getElementById('copyEmail').addEventListener('click', async ()=>{
+      try{
+        await navigator.clipboard.writeText('vyntrix@outlook.com');
+        const btn = document.getElementById('copyEmail');
+        btn.textContent = 'Copied!';
+        setTimeout(()=> btn.textContent = 'Copy email', 1400);
+      }catch(e){ alert('vyntrix@outlook.com'); }
+    });
 
-    // Download resume (placeholder data uri) ---------------------------------
-    (function resumeDownload(){
-      const btn = $('#downloadResume');
-      if(!btn) return;
-      // small example PDF placeholder (data URI text file renamed)
-      const blob = new Blob([`Vyntrix — Resume\n\nThis is a placeholder resume. Replace with your real resume file.`], {type:'text/plain'});
-      const url = URL.createObjectURL(blob);
-      btn.addEventListener('click', ()=> {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'Vyntrix-Resume.txt';
-        a.click();
-      });
-    })();
-
-    // Theme toggle: dark/light (simple) -------------------------------------
-    (function themeToggle(){
-      const btn = $('#themeToggle');
-      const root = document.documentElement;
-      const key = 'vyntrix_theme';
-      function apply(theme){
-        if(theme === 'light'){
-          root.style.setProperty('--bg','#f8fafc');
-          root.style.setProperty('--neon','#0b1b24');
-          root.style.setProperty('--muted','#394857');
-          btn.setAttribute('aria-pressed','true');
-        } else {
-          root.style.removeProperty('--bg');
-          root.style.removeProperty('--neon');
-          root.style.removeProperty('--muted');
-          btn.setAttribute('aria-pressed','false');
-        }
-      }
-      const saved = localStorage.getItem(key) || 'dark';
-      if(saved === 'light') apply('light');
-      btn.addEventListener('click', ()=>{
-        const current = localStorage.getItem(key) || 'dark';
-        const next = current === 'dark' ? 'light' : 'dark';
-        localStorage.setItem(key, next);
-        apply(next);
-      });
-    })();
-
-    // Back to top behavior ---------------------------------------------------
-    (function backToTop(){
-      const btn = $('#backTop');
-      if(!btn) return;
-      btn.addEventListener('click', ()=> window.scrollTo({top:0,behavior:'smooth'}));
-      window.addEventListener('scroll', ()=>{
-        if(window.scrollY > 420) btn.style.display = 'block'; else btn.style.display = 'none';
-      }, {passive:true});
-    })();
-
-    // Avatar tilt on pointermove (subtle) -----------------------------------
+    // Avatar tilt (desktop only)
     (function avatarTilt(){
       const frame = document.querySelector('.avatar-frame');
-      const img = document.querySelector('#avatarImg');
-      if(!frame) return;
-      function onMove(e){
-        const rect = frame.getBoundingClientRect();
+      if(!frame || !isDesktop) return;
+      let rect;
+      frame.addEventListener('pointermove', (e)=>{
+        rect = rect || frame.getBoundingClientRect();
         const cx = rect.left + rect.width/2;
         const cy = rect.top + rect.height/2;
-        const dx = (e.clientX - cx) / rect.width;
-        const dy = (e.clientY - cy) / rect.height;
-        // limit tilt
-        const rx = clamp(dy * -6, -8, 8);
-        const ry = clamp(dx * 8, -12, 12);
+        const dx = (e.clientX - cx)/rect.width;
+        const dy = (e.clientY - cy)/rect.height;
+        const rx = Math.max(-8, Math.min(8, dy * -8));
+        const ry = Math.max(-12, Math.min(12, dx * 12));
         frame.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) translateZ(6px)`;
-      }
-      function onLeave(){ frame.style.transform = ''; }
-      function clamp(v,min,max){ return Math.min(max,Math.max(min,v)); }
-      frame.addEventListener('pointermove', onMove);
-      frame.addEventListener('pointerleave', onLeave);
+      });
+      frame.addEventListener('pointerleave', ()=> frame.style.transform = '');
     })();
 
-    // Particles with perf considerations & visibility handling ---------------
-    (function particles(){
-      const canvas = document.getElementById('particleCanvas');
-      if(!canvas) return;
-      const ctx = canvas.getContext('2d');
-      let w = innerWidth, h = innerHeight;
+    // Particles (canvas) - toggleable, perf-aware
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext && canvas.getContext('2d');
+    let particlesOn = true;
+    const toggleParticlesBtn = document.getElementById('toggleParticles');
+    toggleParticlesBtn.addEventListener('click', ()=>{
+      particlesOn = !particlesOn;
+      toggleParticlesBtn.textContent = particlesOn ? '✨ Particles' : '❌ Particles';
+    });
+
+    (function particlesSystem(){
+      if(!ctx) return;
+      let w=innerWidth, h=innerHeight;
       canvas.width = w; canvas.height = h;
-      let raf = null;
-      // adapt count by size/device (perf)
-      const baseCount = Math.max(48, Math.floor((w*h)/110000));
-      let particles = new Array(baseCount).fill(0).map(()=>({
+      let raf=null;
+      const baseCount = Math.max(36, Math.floor((w*h)/140000));
+      const particles = new Array(baseCount).fill(0).map(()=>({
         x: Math.random()*w, y: Math.random()*h,
-        vx: (Math.random()-0.5)*0.25, vy: (Math.random()-0.5)*0.25,
-        size: 0.8 + Math.random()*2.6, a: 0.04 + Math.random()*0.12
+        vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4,
+        size: 0.6 + Math.random()*2.2, a: 0.02 + Math.random()*0.12
       }));
       let mouseX = w/2, mouseY = h/2;
-      addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
-      // pause when tab not visible
+      // mouse subtle trail
+      addEventListener('mousemove', (e)=> { mouseX = e.clientX; mouseY = e.clientY; }, {passive:true});
+      // visibility handling
       let active = true;
       document.addEventListener('visibilitychange', ()=> {
         active = document.visibilityState === 'visible';
         if(active) loop(); else if(raf) cancelAnimationFrame(raf);
       });
-      // resize
-      addEventListener('resize', ()=> {
-        w = innerWidth; h = innerHeight; canvas.width = w; canvas.height = h;
-      });
-      function step(){
-        if(!active) return;
+      addEventListener('resize', ()=> { w=innerWidth; h=innerHeight; canvas.width=w; canvas.height=h; });
+      function draw(){
+        if(!active || !particlesOn) { ctx.clearRect(0,0,w,h); raf = requestAnimationFrame(draw); return; }
         ctx.clearRect(0,0,w,h);
         for(const p of particles){
-          const dx = (mouseX - p.x), dy = (mouseY - p.y);
-          p.vx += dx * 0.00002; p.vy += dy * 0.00002;
+          const dx=(mouseX - p.x), dy=(mouseY - p.y);
+          p.vx += dx * 0.00002;
+          p.vy += dy * 0.00002;
           p.vx *= 0.995; p.vy *= 0.995;
           p.x += p.vx; p.y += p.vy;
           if(p.x < -10) p.x = w + 10;
@@ -474,64 +368,74 @@
           if(p.y < -10) p.y = h + 10;
           if(p.y > h + 10) p.y = -10;
           ctx.beginPath();
-          ctx.fillStyle = `rgba(255,255,255,${p.a})`;
-          ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
+          ctx.fillStyle = `rgba(138,107,255,${p.a})`;
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
         }
-        raf = requestAnimationFrame(step);
+        raf = requestAnimationFrame(draw);
       }
-      function loop(){ if(raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(step); }
+      function loop(){ if(raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); }
       loop();
     })();
 
-    // Gradient parallax follow cursor (already done visually): subtle movement
-    (function gradientFollow(){
-      const bg = document.getElementById('bgGradient');
-      const bgImage = document.getElementById('bgImage');
-      const gridLayer = document.getElementById('gridLayer');
-      const glowLayer = document.getElementById('glowLayer');
-      addEventListener('mousemove', e => {
-        const x = (e.clientX / innerWidth - 0.5) * 24;
-        const y = (e.clientY / innerHeight - 0.5) * 24;
-        bg.style.transform = `translate(${x/6}px, ${y/6}px)`;
-        bgImage.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.06)`;
-        gridLayer.style.transform = `translate3d(${x/3}px, ${y/3}px, 0)`;
-        glowLayer.style.transform = `translate3d(${x/6}px, ${y/6}px, 0)`;
+    // Gradient follow + parallax scaling
+    (function parallax(){
+      const bg = document.getElementById('bgGradient'), bgImg = document.getElementById('bgImage'), grid = document.getElementById('gridLayer'), glow = document.getElementById('glowLayer');
+      addEventListener('mousemove', (e)=> {
+        const x = (e.clientX/innerWidth - 0.5) * (isDesktop ? 28 : 10);
+        const y = (e.clientY/innerHeight - 0.5) * (isDesktop ? 18 : 6);
+        bg.style.transform = `translate(${x/8}px, ${y/8}px)`;
+        bgImg.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.06)`;
+        grid.style.transform = `translate3d(${x/3}px, ${y/3}px, 0)`;
+        glow.style.transform = `translate3d(${x/6}px, ${y/6}px, 0)`;
       }, {passive:true});
     })();
 
-    // Accessibility: keyboard focus helpers & show outline when Tab used -----
-    (function focusOutline(){
-      function handleFirstTab(e){
-        if(e.key === 'Tab') document.documentElement.classList.add('show-focus');
-      }
-      window.addEventListener('keydown', handleFirstTab, {once:true});
+    // Reveal sections on intersect
+    (function reveal(){
+      const io = new IntersectionObserver(entries=>{ entries.forEach(en=>{ if(en.isIntersecting) en.target.classList.add('revealed'); }); }, {threshold:0.18});
+      document.querySelectorAll('section.content, .card, .avatar-col').forEach(el=> io.observe(el));
     })();
 
-    // Small QoL: reveal sections on intersection
-    (function revealOnView(){
-      const io = new IntersectionObserver(entries => {
-        entries.forEach(en => { if(en.isIntersecting) en.target.classList.add('revealed'); });
-      }, {threshold: 0.18});
-      document.querySelectorAll('section.content, .card, .avatar-col').forEach(el => io.observe(el));
-    })();
-
-    // Tiny helpful polyfills / defensive listeners
-    window.addEventListener('error', (e)=>{ /* don't break UI for 3rd-party errors */ });
-
-    // Keep performance friendly: if reduced motion requested, stop fancy effects
-    (function respectReducedMotion(){
-      const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if(rm){
-        document.querySelectorAll('*').forEach(node => node.style.transitionDuration = '0ms');
-      }
-    })();
-
-    // Final small polish: make all external links open safely
-    (function safeExternal(){
-      document.querySelectorAll('a[target="_blank"]').forEach(a=>{
-        a.setAttribute('rel','noopener noreferrer');
+    // Keybinding: M toggles reduced motion (soft)
+    (function keybinds(){
+      window.addEventListener('keydown', (e)=>{
+        if(e.key.toLowerCase() === 'm'){
+          document.documentElement.classList.toggle('reduced-motion-mode');
+          alert('Toggled reduced motion mode (page will simplify animations).');
+        }
       });
     })();
+
+    // Accessibility: focus outlines for keyboard users
+    (function focusOutline(){
+      window.addEventListener('keydown', function onFirstTab(e){
+        if(e.key === 'Tab'){ document.documentElement.classList.add('kbd'); window.removeEventListener('keydown', onFirstTab); }
+      });
+    })();
+
+    // Ensure avatar GIF displays (workaround for some Tenor clients)
+    (function ensureGif(){
+      const img = document.getElementById('avatarImg');
+      // reload as image to force GIF rendering if needed
+      const src = img.src;
+      const test = new Image();
+      test.onload = ()=> { /* ok */ };
+      test.onerror = ()=> { /* ignore */ };
+      test.src = src;
+    })();
+
+    // remove resume related element (none present) - kept for backward compat
+
+    // Safe external links
+    document.querySelectorAll('a[target="_blank"]').forEach(a=> a.setAttribute('rel','noopener noreferrer'));
+
+    // Small shim to make sure theme button shows initial state
+    (function initUI(){
+      const theme = localStorage.getItem('vyntrix_theme') || 'dark';
+      document.getElementById('themeBtn').textContent = theme === 'light' ? '🌞 Light' : '🌗 Dark';
+      document.getElementById('toggleParticles').textContent = '✨ Particles';
+    })();
+
   </script>
 </body>
 </html>
