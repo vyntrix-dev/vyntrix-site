@@ -2,496 +2,298 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vyntrix — Portfolio</title>
-
-  <!-- Google font -->
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vyntrix</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
   <style>
     :root{
-      --bg1: #0b0c10;
-      --bg2: #050507;
-      --accent: #7c5cff;
-      --accent-2: #6bd6ff;
-      --glass: rgba(255,255,255,0.03);
-      --card: rgba(255,255,255,0.04);
-      --muted: #9aa3b2;
+      --bg1:#0b0c10;
+      --accent:#7c5cff;
+      --muted:#9aa3b2;
+      --card:rgba(255,255,255,0.03);
     }
-
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
-    body{
-      font-family:"Poppins",system-ui,Segoe UI,Roboto,Helvetica,Arial;
-      color:#fff;
-      background: radial-gradient(circle at 10% 20%, rgba(12,11,20,1), rgba(5,5,7,1));
-      overflow-x:hidden;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-    }
+    html,body{height:100%;background:radial-gradient(circle at 10% 20%, #0b0c10, #050507);font-family:"Poppins",sans-serif;color:#fff}
+    body{overflow-x:hidden}
 
-    /* Parallax tiled background grid */
-    .background {
-      position:fixed;
-      inset:-10%;
-      z-index:-3;
-      background-image:
-        linear-gradient(transparent 94%, rgba(255,255,255,0.02) 95%),
-        linear-gradient(90deg, transparent 94%, rgba(255,255,255,0.02) 95%);
-      background-size: 120px 120px, 120px 120px;
-      transform: translate3d(-20px,-20px,0);
-      filter: blur(1px) brightness(.6);
-      animation: bgPulse 12s infinite alternate ease-in-out;
-    }
-
-    @keyframes bgPulse{
-      from{filter: blur(1px) brightness(.55)}
-      to{filter: blur(1.6px) brightness(.75)}
-    }
-
-    /* central layout */
-    .wrap{
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      gap:48px;
-      align-items:center;
-      justify-content:center;
-      padding:48px 28px;
-    }
-
-    .hero{
-      width:100%;
-      max-width:1200px;
-      display:flex;
-      gap:32px;
-      align-items:center;
-      justify-content:space-between;
-      position:relative;
-    }
-
-    /* profile card left */
-    .card-left{
-      flex:1 1 560px;
-      color:#eaeef6;
-      padding:38px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:16px;
-      backdrop-filter: blur(6px);
-      box-shadow: 0 8px 30px rgba(7,6,12,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-    }
-
-    .title{
-      display:flex;
-      gap:20px;
-      align-items:center;
-      margin-bottom:12px;
-      flex-wrap:wrap;
-    }
-    .bigname{
-      font-size:4.2rem;
-      font-weight:700;
-      letter-spacing:1px;
-      color:var(--accent);
-      text-shadow:0 6px 30px rgba(124,92,255,0.12);
-      line-height:0.9;
-    }
-    .subtitle{
-      font-size:1.1rem;
-      color:var(--muted);
-      margin-top:6px;
-      width:100%;
-    }
-
-    .meta{
-      margin-top:18px;
-      display:flex;
-      gap:18px;
-      flex-wrap:wrap;
-      color:var(--muted);
-      font-size:0.95rem;
-    }
-    .meta .item{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
-      padding:8px 12px;
-      border-radius:10px;
-    }
-    .links{
-      margin-top:22px;
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-    .btn{
-      padding:10px 16px;
-      border-radius:10px;
-      border:1.6px solid rgba(255,255,255,0.06);
-      background:transparent;
-      color:#fff;
-      cursor:pointer;
-      font-weight:600;
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      transition:all .22s;
-    }
-    .btn:hover{transform:translateY(-4px); box-shadow:0 6px 26px rgba(106,90,255,0.12)}
-
-    /* profile avatar on right */
-    .avatar-wrap{
-      width:300px;
-      height:300px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border-radius:50%;
-      position:relative;
-    }
-    .avatar {
-      width:240px;
-      height:240px;
-      border-radius:50%;
-      overflow:hidden;
-      display:block;
-      border:6px solid rgba(0,0,0,0.6);
-      box-shadow: 0 0 60px rgba(124,92,255,0.22), 0 8px 30px rgba(7,6,12,0.5);
-      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-    }
-
-    /* glowing ring */
-    .avatar-glow{
-      position:absolute;
-      inset:0;
-      border-radius:50%;
-      pointer-events:none;
-      filter:blur(24px);
-      background: radial-gradient(circle, rgba(124,92,255,0.55), rgba(107,214,255,0.05));
-      transform:scale(1.08);
-      mix-blend-mode:screen;
-      opacity:.95;
-    }
-
-    /* skills grid section */
-    .skills{
-      width:100%;
-      max-width:1200px;
-      padding:28px;
-      border-radius:14px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
-      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-    }
-    .skills h2{
-      text-align:center;
-      margin-bottom:22px;
-      color:#fff;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(160px,1fr));
-      gap:18px;
-      padding:12px 18px;
-    }
-    .skill-card{
-      min-height:96px;
-      border-radius:12px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:12px;
-      flex-direction:column;
-      padding:16px;
-      transition:transform .18s ease, box-shadow .18s ease;
-      border:1px solid rgba(255,255,255,0.03);
-    }
-    .skill-card:hover{ transform:translateY(-8px); box-shadow:0 18px 40px rgba(12,11,20,0.6) }
-    .skill-ico{
-      width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;
-      font-size:22px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005));
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
-    }
-    .skill-name{font-weight:600;color:#e9eef8;font-size:0.95rem}
-
-    footer{
-      margin-top:26px;
-      font-size:0.9rem;
-      color:var(--muted);
-      text-align:center;
-    }
-
-    /* small responsive */
-    @media (max-width:980px){
-      .hero{flex-direction:column-reverse;align-items:center}
-      .avatar-wrap{width:220px;height:220px}
-      .avatar{width:160px;height:160px}
-      .bigname{font-size:3rem}
-    }
-
-    /* fade-in */
-    .fade{opacity:0; transform:translateY(12px); animation:fadein .7s forwards}
-    .fade.delay1{animation-delay:.12s}
-    .fade.delay2{animation-delay:.22s}
-    .fade.delay3{animation-delay:.32s}
-    @keyframes fadein{to{opacity:1; transform:none}}
-
-    /* small settings button bottom-left */
-    .settings-btn{
-      position:fixed;
-      left:18px;
-      bottom:18px;
-      z-index:999;
-      width:46px;
-      height:46px;
-      border-radius:10px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.04);
-      cursor:pointer;
-      box-shadow:0 10px 30px rgba(0,0,0,0.6);
-    }
-    .settings-btn:hover{ transform:translateY(-4px) }
-
-    .tooltip{
-      position:fixed;
-      left:18px;
-      bottom:72px;
-      z-index:1000;
-      background:rgba(10,10,12,0.9);
-      color:#dbe6ff;
-      padding:8px 10px;
-      border-radius:8px;
-      font-size:0.86rem;
-      border:1px solid rgba(255,255,255,0.03);
-      display:none;
-      white-space:nowrap;
-    }
-    .tooltip.show{display:block}
-
-    /* subtle page-wide parallax for bg image */
+    /* parallax background image */
     .bg-image{
-      position:fixed;
-      inset:0;
-      z-index:-2;
-      background-repeat:no-repeat;
-      background-position:center center;
-      background-size:cover;
-      transform:translate3d(-15px,-12px,0) scale(1.05);
-      filter:brightness(.36) blur(2px);
+      position:fixed;inset:0;z-index:-3;background-image:url("https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80");
+      background-size:cover;background-position:center;filter:brightness(.36) blur(2px);transform:scale(1.05);
       transition:transform .18s linear;
     }
+    .glow{
+      position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:600px;height:600px;border-radius:50%;
+      background:radial-gradient(circle, rgba(124,92,255,0.55), rgba(107,214,255,0.05));filter:blur(90px);z-index:-2;opacity:.9;
+    }
 
+    /* layout */
+    .container{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;gap:36px}
+    .hero{width:100%;max-width:1100px;display:flex;gap:28px;align-items:center;justify-content:space-between}
+    .card{
+      flex:1; padding:36px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      backdrop-filter:blur(6px); box-shadow:0 10px 40px rgba(0,0,0,0.6);
+    }
+
+    .left {
+      display:flex;flex-direction:column;gap:12px;
+    }
+    .name{font-size:3.6rem;font-weight:700;color:var(--accent);line-height:0.95}
+    .tagline{color:var(--muted);font-size:1.05rem;margin-top:4px}
+
+    /* typewriter line */
+    .typewriter{
+      margin-top:12px;color:#e9eef8;font-weight:600;height:28px;font-size:1.05rem;
+      white-space:nowrap;overflow:hidden;border-right:2px solid rgba(255,255,255,0.08);
+    }
+
+    .avatar-side{width:320px;display:flex;flex-direction:column;align-items:center;gap:12px}
+    .avatar{
+      width:240px;height:240px;border-radius:50%;overflow:hidden;border:6px solid rgba(0,0,0,0.6);
+      box-shadow:0 0 60px rgba(124,92,255,0.22), 0 8px 30px rgba(0,0,0,0.6);background:var(--card);
+      display:block;object-fit:cover;
+    }
+    .avatar-glow{position:absolute;width:320px;height:320px;border-radius:50%;filter:blur(24px);background:radial-gradient(circle, rgba(124,92,255,0.45), rgba(107,214,255,0.05));transform:scale(1.04);mix-blend-mode:screen}
+
+    .links{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+    .btn{
+      padding:10px 14px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.06);background:transparent;color:#fff;font-weight:600;text-decoration:none;
+      transition:transform .18s,box-shadow .18s;display:inline-flex;align-items:center;gap:8px
+    }
+    .btn:hover{transform:translateY(-6px);box-shadow:0 14px 40px rgba(0,0,0,0.6)}
+
+    /* skills section hidden until reveal */
+    .skills-wrap{width:100%;max-width:1100px;padding:26px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));box-shadow:0 10px 40px rgba(0,0,0,0.6);opacity:0;transform:translateY(24px);transition:all .8s cubic-bezier(.2,.9,.2,1)}
+    .skills-wrap.revealed{opacity:1;transform:none}
+    .skills-title{text-align:center;margin-bottom:18px;font-size:1.4rem;color:#fff}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
+    .skill{
+      background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+      padding:18px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:10px;border:1px solid rgba(255,255,255,0.03);
+      transition:transform .18s,box-shadow .18s
+    }
+    .skill:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(0,0,0,0.5)}
+    .skill-ico{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))}
+    .skill-name{font-weight:600;color:#e9eef8}
+
+    footer{margin-top:28px;color:var(--muted);font-size:0.9rem}
+
+    /* settings button (music toggle) */
+    .settings-btn{position:fixed;left:18px;bottom:18px;z-index:999;width:48px;height:48px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer}
+    .settings-btn:hover{transform:translateY(-4px)}
+    .tooltip{position:fixed;left:18px;bottom:72px;background:rgba(10,10,12,0.9);color:#dbe6ff;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);font-size:.86rem;display:none}
+    .tooltip.show{display:block}
+
+    /* small screens */
+    @media (max-width:980px){
+      .hero{flex-direction:column-reverse;align-items:center}
+      .avatar-side{width:220px}
+      .avatar{width:160px;height:160px}
+      .name{font-size:2.8rem}
+    }
+
+    /* small fade for hero components */
+    .fadein{opacity:0;transform:translateY(12px);animation:fadein 700ms forwards}
+    .fade-delay-1{animation-delay:.12s}
+    .fade-delay-2{animation-delay:.22s}
+    .fade-delay-3{animation-delay:.32s}
+    @keyframes fadein{to{opacity:1;transform:none}}
+
+    /* typewriter caret blink */
+    .caret{display:inline-block;width:2px;height:20px;background:rgba(255,255,255,0.9);margin-left:6px;animation:blink 1s steps(2,end) infinite}
+    @keyframes blink{50%{opacity:0}}
     audio{display:none}
   </style>
 </head>
 <body>
-  <div class="background" id="gridBg"></div>
-  <!-- decorative background image (parallax) -->
-  <div class="bg-image" id="bgImage" style="background-image:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80')"></div>
+  <div class="bg-image" id="bgImage" aria-hidden="true"></div>
+  <div class="glow" aria-hidden="true"></div>
 
-  <div class="wrap">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="card-left fade delay1">
-        <div class="title">
-          <div>
-            <div class="bigname">Vyntrix</div>
-            <div class="subtitle">Swiss Developer &amp; Tech Enthusiast — C++ &amp; Python • College</div>
-          </div>
+  <main class="container">
+    <section class="hero" aria-label="Intro section">
+      <div class="card left fadein fade-delay-1">
+        <div class="name">Hey, I'm Vyntrix</div>
+        <div class="tagline">18-year-old coder from Sweden.</div>
+
+        <!-- Typewriter - cycles phrases -->
+        <div class="typewriter" id="typewriter" aria-live="polite"></div>
+
+        <div class="links fadein fade-delay-2" style="margin-top:18px">
+          <a class="btn" href="https://github.com" target="_blank" rel="noopener">🐙 GitHub</a>
+          <a class="btn" href="https://discord.gg/eT3xGSUJ" target="_blank" rel="noopener">💬 Discord</a>
+          <a class="btn" href="mailto:vyntrix@outlook.com">✉️ Email</a>
         </div>
 
-        <div class="meta fade delay2" aria-hidden="false">
-          <div class="item">📍 Switzerland</div>
-          <div class="item">🎂 20 years old</div>
-          <div class="item">&lt;/&gt; Ostrich algorithm</div>
-        </div>
-
-        <div class="links fade delay3">
-          <button class="btn" onclick="window.open('#','_blank')">🐙 GitHub</button>
-          <button class="btn" onclick="window.open('#','_blank')">💬 Discord</button>
-          <button class="btn" onclick="window.open('mailto:you@example.com')">✉️ Email</button>
-        </div>
-
-        <p style="margin-top:18px;color:var(--muted);max-width:680px;font-size:0.97rem;">
-          I'm a coder focusing on C++ and Python — building robust projects and exploring system & backend engineering.
-        </p>
+        <p style="color:var(--muted);margin-top:18px;max-width:680px">I like building things, exploring low-level code, and learning new languages. Scroll down to see core skills.</p>
       </div>
 
-      <div style="width:360px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
-        <div class="avatar-wrap fade delay2">
-          <div class="avatar-glow" aria-hidden="true"></div>
-          <!-- animated profile pic (your current GIF) -->
-          <img class="avatar" src="https://media.tenor.com/MRboc8Cj1w8AAAAi/cat-meme-hehehe-mwehehe.gif" alt="Vyntrix animated avatar" />
-        </div>
-        <div style="text-align:center;color:var(--muted);font-size:0.95rem">Follow my work and reach out!</div>
+      <div class="avatar-side fadein fade-delay-3" style="position:relative">
+        <div class="avatar-glow" aria-hidden="true"></div>
+        <img class="avatar" id="avatarImg" src="https://media.tenor.com/MRboc8Cj1w8AAAAi/cat-meme-hehehe-mwehehe.gif" alt="Vyntrix animated avatar">
+        <div style="color:var(--muted);font-size:0.95rem;text-align:center">Follow my work — reach out anytime</div>
       </div>
     </section>
 
-    <!-- Skills -->
-    <section class="skills fade delay1" aria-labelledby="skills-title">
-      <h2 id="skills-title">Core Skills</h2>
+    <!-- Skills (hidden until scroll reveals) -->
+    <section class="skills-wrap" id="skillsSection" aria-labelledby="skillsHeading">
+      <div class="skills-title" id="skillsHeading">Core Skills</div>
       <div class="grid" role="list">
-        <!-- Feel free to replace emoji with SVG icons or images -->
-        <div class="skill-card" role="listitem"><div class="skill-ico">🐍</div><div class="skill-name">Python</div></div>
-        <div class="skill-card" role="listitem"><div class="skill-ico">🔵</div><div class="skill-name">C++</div></div>
-        <div class="skill-card" role="listitem"><div class="skill-ico">🌿</div><div class="skill-name">Django</div></div>
-        <div class="skill-card" role="listitem"><div class="skill-ico">🍃</div><div class="skill-name">MongoDB</div></div>
-        <div class="skill-card" role="listitem"><div class="skill-ico">🐘</div><div class="skill-name">PostgreSQL</div></div>
-        <div class="skill-card" role="listitem"><div class="skill-ico">🗄️</div><div class="skill-name">MySQL</div></div>
+        <!-- Keep Python & C++, add distinct others (JavaScript, Rust, Go, SQL, HTML/CSS, React) -->
+        <div class="skill" role="listitem"><div class="skill-ico">🐍</div><div class="skill-name">Python</div></div>
+        <div class="skill" role="listitem"><div class="skill-ico">💠</div><div class="skill-name">C++</div></div>
 
-        <div class="skill-card" role="listitem"><div class="skill-ico">⚙️</div><div class="skill-name">Ansible</div></div>
-        <div class="skill-card" role="listitem"><div class="skill-ico">📊</div><div class="skill-name">Prometheus</div></div>
-        <div class="skill-card" role="listitem"><div class="skill-ico">📈</div><div class="skill-name">Grafana</div></div>
-        <div class="skill-card" role="listitem"><div class="skill-ico">🧩</div><div class="skill-name">Proxmox</div></div>
-        <div class="skill-card" role="listitem"><div class="skill-ico">🔧</div><div class="skill-name">GitLab</div></div>
-        <div class="skill-card" role="listitem"><div class="skill-ico">💬</div><div class="skill-name">Rocket.Chat</div></div>
+        <div class="skill" role="listitem"><div class="skill-ico">🟨</div><div class="skill-name">JavaScript</div></div>
+        <div class="skill" role="listitem"><div class="skill-ico">🦀</div><div class="skill-name">Rust</div></div>
+        <div class="skill" role="listitem"><div class="skill-ico">🐹</div><div class="skill-name">Go</div></div>
+        <div class="skill" role="listitem"><div class="skill-ico">🗄️</div><div class="skill-name">SQL</div></div>
+        <div class="skill" role="listitem"><div class="skill-ico">📐</div><div class="skill-name">HTML &amp; CSS</div></div>
+        <div class="skill" role="listitem"><div class="skill-ico">⚛️</div><div class="skill-name">React</div></div>
       </div>
     </section>
 
     <footer>© 2025 Vyntrix. All rights reserved.</footer>
-  </div>
+  </main>
 
-  <!-- settings (bottom-left) -->
-  <button id="settingsBtn" class="settings-btn" aria-label="Settings (toggle music)">
-    <svg id="gearIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82L4.3 4.3a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H10a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09c.12.6.54 1.12 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V10c.38.46.88.88 1.51 1H21a2 2 0 1 1 0 4h-.09c-.63.21-1.13.55-1.51 1z"/></svg>
-  </button>
-  <div id="tooltip" class="tooltip">Toggle music</div>
+  <!-- settings (music toggle) -->
+  <button id="settingsBtn" class="settings-btn" aria-label="Toggle music">⚙️</button>
+  <div id="tooltip" class="tooltip">Music: On</div>
 
-  <!-- audio element: calm royalty-free ambient track -->
-  <!-- NOTE: some browsers block autoplay (the page will attempt to play and fallback to user click to start) -->
+  <!-- calm royalty-free music (loop) -->
   <audio id="bgMusic" loop preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_552cb10b3d.mp3?filename=ethereal-dreamscape-10349.mp3" type="audio/mpeg">
     Your browser does not support audio.
   </audio>
 
   <script>
-    // Parallax transforms for the background image and grid
+    /***** PARALLAX  *****/
     const bgImage = document.getElementById('bgImage');
-    const gridBg = document.getElementById('gridBg');
-
+    const grid = document.querySelector('.glow');
     document.addEventListener('mousemove', (e) => {
       const x = (e.clientX / window.innerWidth - 0.5) * 18;
       const y = (e.clientY / window.innerHeight - 0.5) * 18;
       bgImage.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.05)`;
-      gridBg.style.transform = `translate3d(${x/3}px, ${y/3}px, 0)`;
+      grid.style.transform = `translate3d(${x/6}px, ${y/6}px, 0)`;
     });
 
-    // Slight parallax for mobile on device orientation (if available)
+    // mobile device orientation (optional)
     if (window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', (ev) => {
-        const gamma = ev.gamma || 0; // left / right
-        const beta = ev.beta || 0; // front / back
+        const gamma = ev.gamma || 0;
+        const beta = ev.beta || 0;
         bgImage.style.transform = `translate3d(${gamma/2}px, ${beta/4}px, 0) scale(1.05)`;
       }, true);
     }
 
-    // Fade-in helper for elements already assigned classes
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.fade').forEach((el, i) => {
-        // classes already animate via CSS; we ensure they exist
-      });
-    });
+    /***** TYPEWRITER EFFECT *****/
+    const typeEl = document.getElementById('typewriter');
+    const phrases = [
+      "Python • C++ • JavaScript",
+      "Systems & Low-level tinkering",
+      "Learning Rust & Go",
+      "Building small, useful tools"
+    ];
+    let tIndex = 0, charIndex = 0, deleting = false;
 
-    // Music control
+    function typeTick() {
+      const current = phrases[tIndex];
+      if (!deleting) {
+        charIndex++;
+        typeEl.textContent = current.slice(0, charIndex);
+        if (charIndex === current.length) {
+          deleting = true;
+          setTimeout(typeTick, 900);
+          return;
+        }
+      } else {
+        charIndex--;
+        typeEl.textContent = current.slice(0, charIndex);
+        if (charIndex === 0) {
+          deleting = false;
+          tIndex = (tIndex + 1) % phrases.length;
+        }
+      }
+      // variable speed: longer pause at full phrase
+      const speed = deleting ? 40 : 80;
+      setTimeout(typeTick, speed);
+    }
+    // caret
+    const caret = document.createElement('span');
+    caret.className = 'caret';
+    typeEl.appendChild(caret);
+    // start after tiny delay
+    setTimeout(typeTick, 600);
+
+    /***** SCROLL REVEAL FOR SKILLS  *****/
+    const skillsEl = document.getElementById('skillsSection');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, {threshold:0.18});
+    // observe the container that wraps skills
+    const skillsWrap = document.getElementById('skillsSection');
+    if (skillsWrap) observer.observe(skillsWrap);
+
+    /***** MUSIC & SETTINGS *****/
     const audio = document.getElementById('bgMusic');
     const settingsBtn = document.getElementById('settingsBtn');
     const tooltip = document.getElementById('tooltip');
-    const gearIcon = document.getElementById('gearIcon');
 
-    // load muted state from localStorage (default: false => music on)
-    let isMuted = false;
-    try{
-      const saved = localStorage.getItem('vyntrix_music_muted');
-      isMuted = saved === 'true';
-    }catch(e){ isMuted = false; }
+    // persistent muted state
+    let muted = false;
+    try {
+      const stored = localStorage.getItem('vyntrix_music_muted');
+      muted = stored === 'true';
+    } catch (e) { muted = false; }
 
-    // apply initial state
-    audio.muted = isMuted;
-    updateSettingsIcon();
+    audio.muted = muted;
+    updateTooltip();
 
-    // Try to autoplay; browsers may block autoplay with sound
-    function tryAutoplay() {
-      audio.play().then(()=> {
-        // playing succeeded
-      }).catch(()=> {
-        // ignored: user interaction required — we keep the audio element ready
-      });
+    function updateTooltip() {
+      tooltip.textContent = audio.muted ? 'Music: Off' : 'Music: On';
     }
-    // Attempt to autoplay once
+
+    // attempt to autoplay (may be blocked)
+    function tryAutoplay() {
+      audio.play().catch(()=>{ /* blocked until interaction */ });
+    }
     tryAutoplay();
 
-    // show tooltip briefly on hover/tap
-    settingsBtn.addEventListener('mouseenter', () => tooltip.classList.add('show'));
-    settingsBtn.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
-
-    // toggle music on click
+    // click toggles
     settingsBtn.addEventListener('click', () => {
-      // If audio is paused and not muted, try to play
-      if (audio.paused && !audio.muted) {
-        audio.play().catch(()=>{});
-      }
-      isMuted = !isMuted;
-      audio.muted = isMuted;
-      localStorage.setItem('vyntrix_music_muted', String(isMuted));
-      // if user unmutes but audio is paused, try to start play (common on browsers)
-      if (!isMuted && audio.paused) {
-        audio.play().catch(()=>{});
-      }
-      updateSettingsIcon();
-      // show a small tooltip feedback
-      tooltip.textContent = isMuted ? 'Music off' : 'Music on';
+      audio.muted = !audio.muted;
+      try { localStorage.setItem('vyntrix_music_muted', String(audio.muted)); } catch(e){}
+      updateTooltip();
+      // If unmuted try to play
+      if (!audio.muted) audio.play().catch(()=>{});
+      // flash tooltip
       tooltip.classList.add('show');
-      setTimeout(()=>{ tooltip.classList.remove('show'); tooltip.textContent = 'Toggle music' }, 1100);
+      tooltip.style.display = 'block';
+      setTimeout(()=>{ tooltip.style.display='none'; tooltip.classList.remove('show') }, 1200);
     });
 
-    function updateSettingsIcon(){
-      // change inner SVG color / shape to reflect mute/unmute
-      settingsBtn.style.color = isMuted ? 'rgba(255,255,255,0.6)' : 'white';
-      // Optionally add a small dot when on
-      if (!isMuted) {
-        // add a small pulse ring
-        if (!document.getElementById('onDot')) {
-          const dot = document.createElement('span');
-          dot.id = 'onDot';
-          dot.style.position = 'absolute';
-          dot.style.right = '-6px';
-          dot.style.top = '-6px';
-          dot.style.width = '10px';
-          dot.style.height = '10px';
-          dot.style.borderRadius = '50%';
-          dot.style.background = 'linear-gradient(90deg, #6bd6ff, #7c5cff)';
-          dot.style.boxShadow = '0 6px 18px rgba(124,92,255,0.28)';
-          settingsBtn.appendChild(dot);
-        }
-      } else {
-        const dot = document.getElementById('onDot');
-        if (dot) dot.remove();
-      }
-    }
+    // show tooltip on hover
+    settingsBtn.addEventListener('mouseenter', ()=>{ tooltip.style.display='block'; tooltip.classList.add('show') });
+    settingsBtn.addEventListener('mouseleave', ()=>{ tooltip.style.display='none'; tooltip.classList.remove('show') });
 
-    // If the user interacts (click anywhere), attempt play in case autoplay was blocked,
-    // this avoids requiring the settings button specifically.
-    let firstInteraction = false;
-    function handleFirstInteraction(){
-      if (firstInteraction) return;
-      firstInteraction = true;
-      if (!audio.muted) {
-        audio.play().catch(()=>{});
-      }
+    // first interaction fallback to start audio if unmuted
+    let interacted = false;
+    function onFirstInteraction() {
+      if (interacted) return;
+      interacted = true;
+      if (!audio.muted) audio.play().catch(()=>{});
     }
-    document.addEventListener('click', handleFirstInteraction, {once:true});
-    document.addEventListener('keydown', handleFirstInteraction, {once:true});
+    document.addEventListener('click', onFirstInteraction, {once:true});
+    document.addEventListener('keydown', onFirstInteraction, {once:true});
 
-    // Small accessibility: pressing "m" toggles music
+    /***** SMOOTH SCROLL WHEN "Scroll down" (optional) *****/
+    // If you want a scroll button you can add it; currently the user sees the page and can scroll naturally.
+
+    /***** A11Y: keyboard toggle (press M) *****/
     document.addEventListener('keydown', (e) => {
-      if (e.key.toLowerCase() === 'm') {
-        settingsBtn.click();
-      }
+      if (e.key.toLowerCase() === 'm') settingsBtn.click();
     });
   </script>
 </body>
