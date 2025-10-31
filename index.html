@@ -122,6 +122,31 @@
     .small-btn{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text);cursor:pointer;font-weight:700}
 
     /* quote */
+
+/* make theme dropdown open on hover */
+.theme-ui:hover .theme-select {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+}
+
+.theme-select {
+  position: absolute;
+  bottom: 52px;
+  left: 0;
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .25s ease;
+  background: rgba(0,0,0,0.8);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 8px;
+  font-weight: 700;
+  z-index: 1001;
+}
+
     .portfolio-quote{margin-top:18px;padding:18px;border-radius:10px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);color:var(--muted);font-style:italic;max-width:880px;text-align:center;box-shadow:0 18px 60px rgba(0,0,0,0.45)}
     .portfolio-quote strong{display:block;margin-top:8px;color:var(--text);font-style:normal;font-weight:700}
 
@@ -140,11 +165,11 @@
 
   <!-- theme UI (dropdown + toggles) -->
   <div class="theme-ui" role="region" aria-label="Theme controls">
-    <select id="themeSelect" class="theme-select" aria-label="Choose theme">
+    <div class="theme-dropdown"><select id="themeSelect" class="theme-select" aria-label="Choose theme">
       <option value="dark">Dark (Default)</option>
       <option value="light">Light</option>
       <option value="christmas">🎄 Christmas</option>
-    </select>
+    </select></div>
     <button id="toggleParticles" class="small-btn" title="Toggle particles">✨ Particles</button>
     <button id="toggleSnow" class="small-btn" title="Toggle snow">❄️ Snow</button>
   </div>
@@ -279,6 +304,7 @@
     let particlesOn = (localStorage.getItem(PARTICLES_KEY) !== 'false');
     let snowOn = (localStorage.getItem(SNOW_KEY) === 'true');
     toggleParticlesBtn.textContent = particlesOn ? '✨ Particles' : '❌ Particles';
+        particleCanvas.style.display = particlesOn ? 'block' : 'none';
     toggleSnowBtn.textContent = snowOn ? '❄️ Snow' : '❌ Snow';
 
     // --- theme apply ---
@@ -456,6 +482,7 @@
         particlesOn = !particlesOn;
         localStorage.setItem(PARTICLES_KEY, particlesOn ? 'true' : 'false');
         toggleParticlesBtn.textContent = particlesOn ? '✨ Particles' : '❌ Particles';
+        particleCanvas.style.display = particlesOn ? 'block' : 'none';
       });
     })();
 
@@ -570,6 +597,7 @@
         localStorage.setItem(SNOW_KEY, snowOn ? 'true' : 'false');
         toggleSnowBtn.textContent = snowOn ? '❄️ Snow' : '❌ Snow';
         if(document.documentElement.classList.contains('christmas')) {
+          snowCanvas.style.display = snowOn ? 'block' : 'none';
           snowCanvas.classList.toggle('lights-enabled', snowOn);
         }
       });
@@ -600,6 +628,7 @@
       const theme = localStorage.getItem(THEME_KEY) || 'dark';
       themeSelect.value = theme;
       toggleParticlesBtn.textContent = particlesOn ? '✨ Particles' : '❌ Particles';
+        particleCanvas.style.display = particlesOn ? 'block' : 'none';
       toggleSnowBtn.textContent = snowOn ? '❄️ Snow' : '❌ Snow';
       if(theme === 'christmas') {
         document.documentElement.classList.add('christmas');
