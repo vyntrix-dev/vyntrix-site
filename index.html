@@ -21,6 +21,7 @@
       --radius:12px;
       --max-w:1200px;
       --focus:3px solid rgba(138,107,255,0.14);
+      --parallax-intensity: 1.0; /* will be adjusted per theme by JS */
     }
     html,body{height:100%;margin:0;font-family:"Poppins",system-ui,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;scroll-behavior:smooth;overflow-x:hidden}
     a{color:inherit;text-decoration:none}
@@ -48,8 +49,8 @@
 
 /* main layout */
     .wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px;gap:36px}
-    .hero{width:100%;max-width:var(--max-w);display:flex;gap:40px;align-items:center;justify-content:space-between}
-    .card{flex:1;padding:36px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.008));backdrop-filter:blur(8px);box-shadow:0 18px 70px rgba(0,0,0,0.6)}
+    .hero{width:100%;max-width:var(--max-w);display:flex;gap:40px;align-items:center;justify-content:space-between;transition:transform .12s linear}
+    .card{flex:1;padding:36px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.008));backdrop-filter:blur(8px);box-shadow:0 18px 70px rgba(0,0,0,0.6);transition:transform .18s cubic-bezier(.2,.9,.2,1)}
 
 /* left column */
     .greeting{font-size:1.02rem;color:var(--muted);font-weight:600}
@@ -59,8 +60,8 @@
     .typewriter .caret{opacity:0.95;margin-left:6px;animation:blink 1.1s steps(2) infinite}
     @keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
 
-/* avatar column */
-    .avatar-col{width:360px;display:flex;flex-direction:column;align-items:center;gap:12px;position:relative}
+/* sections */
+    .avatar-col{display:none} /* avatar removed - keep class in case scripts reference it */
     .avatar-frame{width:300px;height:300px;border-radius:50%;overflow:hidden;border:10px solid rgba(255,255,255,0.04);box-shadow:0 40px 120px rgba(106,209,255,0.04), inset 0 1px 0 rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.02);animation:float 6s ease-in-out infinite;transition:transform .28s}
     .avatar-frame img{width:100%;height:100%;object-fit:cover;display:block;animation:glowPulse 4s ease-in-out infinite;filter:drop-shadow(0 12px 28px rgba(0,0,0,0.35))}
     .avatar-glow-ring{position:absolute;left:50%;transform:translateX(-50%);bottom:-26px;width:480px;height:120px;border-radius:999px;background:linear-gradient(90deg, rgba(106,209,255,0.06), rgba(138,107,255,0.12));filter:blur(48px);mix-blend-mode:screen;animation:glowPulse 4s ease-in-out infinite alternate}
@@ -111,42 +112,45 @@
       --muted: #dbe7db;
       --accent1: #ec4a4a;
       --accent2: #2bb24a;
+      --parallax-intensity: 1.2;
+    }
+
+/* cyber theme */
+    :root.cyber {
+      --bg: linear-gradient(120deg,#030017 0%, #001226 60%, #020a1a 100%);
+      --text: #e6fffe;
+      --muted: #9fe6ff;
+      --accent1: #00ffd5;
+      --accent2: #ff00d7;
+      --glow: rgba(0,255,213,0.06);
+      --parallax-intensity: 1.4;
+    }
+
+/* sunset theme */
+    :root.sunset {
+      --bg: linear-gradient(120deg,#0b0212 0%, #3b0d3a 40%, #ff7a5c 100%);
+      --text: #fff6f3;
+      --muted: #f1d7d0;
+      --accent1: #ff8a4b;
+      --accent2: #8b66ff;
+      --parallax-intensity: 1.1;
     }
 
     .lights-enabled { opacity:1; pointer-events:none; transition:opacity .6s ease; }
     .lights-disabled { opacity:0; pointer-events:none; transition:opacity .6s ease; }
 
-    /* theme UI */
+/* theme UI */
     .theme-ui{position:fixed;left:18px;bottom:18px;z-index:1000;display:flex;gap:8px;align-items:center;backdrop-filter:blur(6px);padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.003))}
-    .theme-select{appearance:none;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text);font-weight:700;cursor:pointer}
+    .theme-btn{appearance:none;padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:10px}
     .small-btn{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text);cursor:pointer;font-weight:700}
 
-    /* quote */
+/* small dropdown hint */
+    .theme-label{font-weight:700;font-size:0.92rem;color:var(--muted);margin-right:6px}
 
-/* make theme dropdown open on hover */
-.theme-ui:hover .theme-select {
-  display: block;
-  opacity: 1;
-  visibility: visible;
-}
+/* subtle tooltip-like hover for the theme button */
+    .theme-btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.45)}
 
-.theme-select {
-  position: absolute;
-  bottom: 52px;
-  left: 0;
-  display: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity .25s ease;
-  background: rgba(0,0,0,0.8);
-  border: 1px solid rgba(255,255,255,0.06);
-  color: var(--text);
-  border-radius: 8px;
-  padding: 8px;
-  font-weight: 700;
-  z-index: 1001;
-}
-
+/* quote */
     .portfolio-quote{margin-top:18px;padding:18px;border-radius:10px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);color:var(--muted);font-style:italic;max-width:880px;text-align:center;box-shadow:0 18px 60px rgba(0,0,0,0.45)}
     .portfolio-quote strong{display:block;margin-top:8px;color:var(--text);font-style:normal;font-weight:700}
 
@@ -163,13 +167,10 @@
   <canvas id="lightsCanvas" aria-hidden="true" class="lights-disabled"></canvas>
   <canvas id="snowCanvas" aria-hidden="true" class="lights-disabled"></canvas>
 
-  <!-- theme UI (dropdown + toggles) -->
+  <!-- theme UI (button + toggles) -->
   <div class="theme-ui" role="region" aria-label="Theme controls">
-    <div class="theme-dropdown"><select id="themeSelect" class="theme-select" aria-label="Choose theme">
-      <option value="dark">Dark (Default)</option>
-      <option value="light">Light</option>
-      <option value="christmas">🎄 Christmas</option>
-    </select></div>
+    <div class="theme-label" aria-hidden="true">Theme</div>
+    <button id="themeButton" class="theme-btn" aria-live="polite" aria-pressed="false" title="Cycle theme">Theme: Dark</button>
     <button id="toggleParticles" class="small-btn" title="Toggle particles">✨ Particles</button>
     <button id="toggleSnow" class="small-btn" title="Toggle snow">❄️ Snow</button>
   </div>
@@ -201,14 +202,8 @@
         <div style="color:var(--muted);margin-top:16px;max-width:760px">I build tools, explore system-level code, and learn new technologies. Scroll to see skills, knowledge and contact info. Press <strong>M</strong> to toggle reduced motion.</div>
       </div>
 
-      <div class="avatar-col fade" style="--delay:.24s">
-        <div class="avatar-frame" role="img" aria-label="Vyntrix avatar">
-          <!-- Your PNG avatar: save it as avatar.png in the same folder, or replace this src with a hosted URL -->
-          <img id="avatarImg" src="avatar.png" alt="Cat avatar" loading="lazy" decoding="async">
-        </div>
-        <div class="avatar-glow-ring" aria-hidden="true"></div>
-        <div class="follow" style="color:var(--muted)">Follow my work — reach out anytime</div>
-      </div>
+      <!-- AVATAR REMOVED ON PURPOSE: kept placeholder class for compatibility -->
+      <div class="avatar-col fade" style="--delay:.24s" aria-hidden="true"></div>
     </section>
 
     <!-- SKILLS -->
@@ -293,32 +288,51 @@
     const SNOW_KEY = 'vyntrix_snow';
 
     // --- DOM refs ---
-    const themeSelect = document.getElementById('themeSelect');
+    const themeButton = document.getElementById('themeButton');
     const toggleParticlesBtn = document.getElementById('toggleParticles');
     const toggleSnowBtn = document.getElementById('toggleSnow');
     const particleCanvas = document.getElementById('particleCanvas');
     const lightsCanvas = document.getElementById('lightsCanvas');
     const snowCanvas = document.getElementById('snowCanvas');
+    const bgGradient = document.getElementById('bgGradient');
+    const bgImage = document.getElementById('bgImage');
+    const gridLayer = document.getElementById('gridLayer');
+    const glowLayer = document.getElementById('glowLayer');
+    const hero = document.querySelector('.hero');
+    const cards = document.querySelectorAll('.card, section.content, .knowledge-card, .contact-card');
 
     // --- state ---
     let particlesOn = (localStorage.getItem(PARTICLES_KEY) !== 'false');
     let snowOn = (localStorage.getItem(SNOW_KEY) === 'true');
     toggleParticlesBtn.textContent = particlesOn ? '✨ Particles' : '❌ Particles';
-        particleCanvas.style.display = particlesOn ? 'block' : 'none';
+    particleCanvas.style.display = particlesOn ? 'block' : 'none';
     toggleSnowBtn.textContent = snowOn ? '❄️ Snow' : '❌ Snow';
 
-    // --- theme apply ---
-    function applyTheme(theme){
-      // clear christmas class
-      document.documentElement.classList.remove('christmas');
-      // clear any inline overrides
+    // --- themes ---
+    const themes = ['dark','light','cyber','sunset','christmas'];
+    const themeNice = {
+      dark: 'Dark',
+      light: 'Light',
+      cyber: 'Cyber',
+      sunset: 'Sunset',
+      christmas: 'Christmas'
+    };
+
+    function applyTheme(theme) {
+      // clear theme classes
+      document.documentElement.classList.remove('christmas','cyber','sunset');
+      // clear inline overrides
       document.documentElement.style.removeProperty('--bg');
       document.documentElement.style.removeProperty('--text');
       document.documentElement.style.removeProperty('--muted');
       document.documentElement.style.removeProperty('--accent1');
       document.documentElement.style.removeProperty('--accent2');
+      document.documentElement.style.removeProperty('--parallax-intensity');
 
-      if(theme === 'light'){
+      // default intensity
+      document.documentElement.style.setProperty('--parallax-intensity', '1.0');
+
+      if (theme === 'light') {
         document.documentElement.style.setProperty('--bg','#f7fafc');
         document.documentElement.style.setProperty('--text','#071224');
         document.documentElement.style.setProperty('--muted','#4b5563');
@@ -329,11 +343,37 @@
         lightsCanvas.classList.add('lights-disabled');
         snowCanvas.classList.remove('lights-enabled');
         snowCanvas.classList.add('lights-disabled');
-      } else if(theme === 'christmas'){
+        // subtle parallax for light
+        document.documentElement.style.setProperty('--parallax-intensity', '0.9');
+      } else if (theme === 'christmas') {
         document.documentElement.classList.add('christmas');
         lightsCanvas.classList.remove('lights-disabled');
         lightsCanvas.classList.add('lights-enabled');
-        snowCanvas.classList.toggle('lights-enabled', snowOn);
+        // ensure visible snow for christmas (user requested snow actually falls and is seen)
+        snowOn = true;
+        localStorage.setItem(SNOW_KEY, 'true');
+        toggleSnowBtn.textContent = '❄️ Snow';
+        snowCanvas.classList.remove('lights-disabled');
+        snowCanvas.classList.add('lights-enabled');
+        snowCanvas.style.display = 'block';
+        document.documentElement.style.setProperty('--parallax-intensity', '1.2');
+      } else if (theme === 'cyber') {
+        document.documentElement.classList.add('cyber');
+        // cyber palette handled by :root.cyber in CSS
+        document.body.style.background = '';
+        lightsCanvas.classList.remove('lights-enabled');
+        lightsCanvas.classList.add('lights-disabled');
+        snowCanvas.classList.remove('lights-enabled');
+        snowCanvas.classList.add('lights-disabled');
+        document.documentElement.style.setProperty('--parallax-intensity', '1.4');
+      } else if (theme === 'sunset') {
+        document.documentElement.classList.add('sunset');
+        document.body.style.background = '';
+        lightsCanvas.classList.remove('lights-enabled');
+        lightsCanvas.classList.add('lights-disabled');
+        snowCanvas.classList.remove('lights-enabled');
+        snowCanvas.classList.add('lights-disabled');
+        document.documentElement.style.setProperty('--parallax-intensity', '1.1');
       } else {
         // dark/default
         document.body.style.background = '';
@@ -341,26 +381,49 @@
         lightsCanvas.classList.add('lights-disabled');
         snowCanvas.classList.remove('lights-enabled');
         snowCanvas.classList.add('lights-disabled');
+        document.documentElement.style.setProperty('--parallax-intensity', '1.0');
       }
+
+      // update UI label & persist
+      themeButton.textContent = `Theme: ${themeNice[theme] || theme}`;
+      themeButton.setAttribute('aria-pressed', 'false');
       localStorage.setItem(THEME_KEY, theme);
-      themeSelect.value = theme;
+
+      // small visual feedback: update glow layer color if cyber/sunset
+      if (theme === 'cyber') {
+        glowLayer.style.background = 'radial-gradient(circle, rgba(0,255,213,0.06), rgba(255,0,215,0.02))';
+      } else if (theme === 'sunset') {
+        glowLayer.style.background = 'radial-gradient(circle, rgba(255,138,75,0.06), rgba(139,102,255,0.02))';
+      } else if (theme === 'christmas') {
+        glowLayer.style.background = 'radial-gradient(circle, rgba(236,74,74,0.06), rgba(43,178,74,0.02))';
+      } else {
+        glowLayer.style.background = 'radial-gradient(circle, rgba(106,209,255,0.08), rgba(138,107,255,0.03))';
+      }
     }
 
     // init theme
     (function initTheme(){
       const saved = localStorage.getItem(THEME_KEY) || 'dark';
       applyTheme(saved);
-      themeSelect.value = saved;
+      // update button label if saved
+      themeButton.textContent = `Theme: ${themeNice[saved] || saved}`;
     })();
 
-    themeSelect.addEventListener('change', (e)=>{
-      const val = e.target.value;
-      applyTheme(val);
-      if(val !== 'christmas'){
-        snowCanvas.classList.remove('lights-enabled');
-        snowCanvas.classList.add('lights-disabled');
+    // theme cycle on click
+    themeButton.addEventListener('click', ()=>{
+      const cur = localStorage.getItem(THEME_KEY) || 'dark';
+      const idx = themes.indexOf(cur);
+      const next = themes[(idx + 1) % themes.length];
+      applyTheme(next);
+      // when switching to christmas, ensure visual snow & lights are on
+      if(next === 'christmas') {
+        snowCanvas.style.display = 'block';
       } else {
-        snowCanvas.classList.toggle('lights-enabled', snowOn);
+        // if user had snow off previously, keep it off when leaving christmas (respect storage)
+        const storedSnow = localStorage.getItem(SNOW_KEY) === 'true';
+        snowOn = storedSnow;
+        toggleSnowBtn.textContent = snowOn ? '❄️ Snow' : '❌ Snow';
+        snowCanvas.style.display = snowOn ? 'block' : 'none';
       }
     });
 
@@ -414,7 +477,7 @@
       try{ await navigator.clipboard.writeText('vyntrix@outlook.com'); const btn = document.getElementById('copyEmail'); btn.textContent = 'Copied!'; setTimeout(()=> btn.textContent = 'Copy email', 1400); }catch(e){ alert('vyntrix@outlook.com'); }
     });
 
-    // --- avatar tilt (rAF throttle, fixed) ---
+    // --- avatar tilt (noop because avatar removed) ---
     (function avatarTilt(){
       const frame = document.querySelector('.avatar-frame');
       if(!frame || !isDesktop) return;
@@ -486,23 +549,49 @@
       });
     })();
 
-    // --- parallax (rAF-throttled) ---
+    // --- parallax (rAF-throttled) that also nudges content ---
     (function parallax(){
-      const bg = document.getElementById('bgGradient'), bgImg = document.getElementById('bgImage'), grid = document.getElementById('gridLayer'), glow = document.getElementById('glowLayer');
-      let ticking = false;
-      addEventListener('mousemove', (e)=>{
-        if(!isDesktop) return;
+      if(!isDesktop) return;
+      let lastX = 0, lastY = 0, ticking = false;
+      const maxBgMove = 40; // background max px
+      const maxContentMove = 10; // content max px (cards)
+      const onMove = (e) => {
+        const intensity = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--parallax-intensity')) || 1;
+        const nx = (e.clientX/innerWidth - 0.5);
+        const ny = (e.clientY/innerHeight - 0.5);
+        lastX = nx; lastY = ny;
         if(!ticking){
           requestAnimationFrame(()=>{
-            const x = (e.clientX/innerWidth - 0.5) * 28;
-            const y = (e.clientY/innerHeight - 0.5) * 18;
-            bg.style.transform = `translate3d(${x/8}px, ${y/8}px, 0)`;
-            bgImg.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.06)`;
-            grid.style.transform = `translate3d(${x/3}px, ${y/3}px, 0)`;
-            glow.style.transform = `translate3d(${x/6}px, ${y/6}px, 0)`;
+            const bgX = nx * maxBgMove * (0.5 * intensity);
+            const bgY = ny * maxBgMove * (0.5 * intensity);
+            bgGradient.style.transform = `translate3d(${bgX/8}px, ${bgY/8}px, 0)`;
+            bgImage.style.transform = `translate3d(${bgX}px, ${bgY}px, 0) scale(${1 + 0.02 * intensity})`;
+            gridLayer.style.transform = `translate3d(${bgX/3}px, ${bgY/3}px, 0)`;
+            glowLayer.style.transform = `translate3d(${bgX/6}px, ${bgY/6}px, 0)`;
+
+            // gently nudge main hero and cards for depth
+            const contentX = nx * maxContentMove * (0.8 * intensity);
+            const contentY = ny * maxContentMove * (0.8 * intensity);
+            hero.style.transform = `translate3d(${contentX}px, ${contentY}px, 0)`;
+            cards.forEach((c,i)=>{
+              // staggered depth: earlier cards move slightly more
+              const depthFactor = 1 - (i * 0.03);
+              c.style.transform = `translate3d(${contentX * depthFactor * 0.7}px, ${contentY * depthFactor * 0.7}px, 0)`;
+            });
+
             ticking = false;
           });
           ticking = true;
+        }
+      };
+      addEventListener('mousemove', onMove, {passive:true});
+      // small device orientation support
+      window.addEventListener('deviceorientation', (ev) => {
+        if(Math.abs(ev.gamma) > 1 || Math.abs(ev.beta) > 1) {
+          const fakeX = (ev.gamma / 45); // normalize
+          const fakeY = (ev.beta / 45);
+          const e = {clientX: (fakeX+0.5)*innerWidth, clientY: (fakeY+0.5)*innerHeight};
+          onMove(e);
         }
       }, {passive:true});
     })();
@@ -563,28 +652,44 @@
       rafId = requestAnimationFrame(draw);
     })();
 
-    // --- snow (lightweight) ---
+    // --- snow (visible when christmas) ---
     (function snowSystem(){
       const ctx = snowCanvas.getContext && snowCanvas.getContext('2d');
       if(!ctx) return;
       let w=innerWidth, h=innerHeight, raf=null, flakes=[];
-      const maxFlakesBase = 60;
+      const maxFlakesBase = 160; // increased so snow is visible
       function resize(){ w=innerWidth; h=innerHeight; snowCanvas.width=w; snowCanvas.height=h; initFlakes(); }
       function initFlakes(){
-        const count = Math.min(Math.max(16, Math.floor((w*h)/22000)), maxFlakesBase);
-        flakes = new Array(count).fill(0).map(()=>({ x: Math.random()*w, y: Math.random()*h, r: 1 + Math.random()*3, vx: (Math.random()-0.5)*0.4, vy: 0.3 + Math.random()*0.6, rot: Math.random()*Math.PI*2, rotSpeed: (Math.random()-0.5)*0.02, alpha: 0.6 + Math.random()*0.4 }));
+        // count depends on viewport; christmas should be noticeable -> higher cap
+        const count = Math.min(Math.max(40, Math.floor((w*h)/12000)), maxFlakesBase);
+        flakes = new Array(count).fill(0).map(()=>({
+          x: Math.random()*w,
+          y: Math.random()*h,
+          r: 1 + Math.random()*3.6, // larger sizes for visibility
+          vx: (Math.random()-0.5)*0.6,
+          vy: 0.6 + Math.random()*1.4,
+          rot: Math.random()*Math.PI*2,
+          rotSpeed: (Math.random()-0.5)*0.04,
+          alpha: 0.6 + Math.random()*0.4
+        }));
       }
       function draw(){
         ctx.clearRect(0,0,w,h);
         if(!document.documentElement.classList.contains('christmas') || !snowOn){ raf = requestAnimationFrame(draw); return; }
         ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = 'white';
         for(const f of flakes){
           f.x += f.vx; f.y += f.vy; f.rot += f.rotSpeed;
-          if(f.y > h + 8) { f.y = -10; f.x = Math.random()*w; }
+          if(f.y > h + 12) { f.y = -10; f.x = Math.random()*w; }
           if(f.x < -10) f.x = w + 10;
           if(f.x > w + 10) f.x = -10;
-          ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(f.rot); ctx.globalAlpha = f.alpha;
-          ctx.beginPath(); ctx.arc(0, 0, f.r, 0, Math.PI*2); ctx.fill(); ctx.restore();
+          ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(f.rot);
+          ctx.globalAlpha = Math.max(0.25, Math.min(0.95, f.alpha));
+          // draw soft circular flakes
+          ctx.beginPath();
+          ctx.arc(0, 0, f.r, 0, Math.PI*2);
+          ctx.fill();
+          ctx.restore();
         }
         raf = requestAnimationFrame(draw);
       }
@@ -596,9 +701,13 @@
         snowOn = !snowOn;
         localStorage.setItem(SNOW_KEY, snowOn ? 'true' : 'false');
         toggleSnowBtn.textContent = snowOn ? '❄️ Snow' : '❌ Snow';
+        // When turning snow on while in christmas theme, ensure canvas visible
         if(document.documentElement.classList.contains('christmas')) {
           snowCanvas.style.display = snowOn ? 'block' : 'none';
           snowCanvas.classList.toggle('lights-enabled', snowOn);
+        } else {
+          // outside christmas theme, still show if toggled but less visible (not overriding theme)
+          snowCanvas.style.display = snowOn ? 'block' : 'none';
         }
       });
     })();
@@ -610,7 +719,7 @@
       });
     })();
 
-    // ensure avatar loads (best effort)
+    // ensure avatar loads (noop now)
     (function ensureAvatar(){
       const img = document.getElementById('avatarImg');
       if(!img) return;
@@ -626,16 +735,25 @@
     // init UI state
     (function initUI(){
       const theme = localStorage.getItem(THEME_KEY) || 'dark';
-      themeSelect.value = theme;
+      // label
+      themeButton.textContent = `Theme: ${themeNice[theme] || theme}`;
       toggleParticlesBtn.textContent = particlesOn ? '✨ Particles' : '❌ Particles';
-        particleCanvas.style.display = particlesOn ? 'block' : 'none';
+      particleCanvas.style.display = particlesOn ? 'block' : 'none';
       toggleSnowBtn.textContent = snowOn ? '❄️ Snow' : '❌ Snow';
       if(theme === 'christmas') {
         document.documentElement.classList.add('christmas');
         lightsCanvas.classList.add('lights-enabled');
-        if(snowOn) snowCanvas.classList.add('lights-enabled');
+        // ensure snow visible for christmas
+        snowOn = true;
+        localStorage.setItem(SNOW_KEY, 'true');
+        snowCanvas.classList.add('lights-enabled');
+        snowCanvas.style.display = 'block';
+      } else {
+        // respect previous snow setting
+        snowCanvas.style.display = snowOn ? 'block' : 'none';
       }
     })();
+
   </script>
 </body>
 </html>
